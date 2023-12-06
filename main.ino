@@ -399,7 +399,7 @@ class parking{
       AcZ = Wire.read() << 8 | Wire.read();
     }
 
-    double getAngleY() {
+    void getAngleY() {
       getData();
       // Pitch angle
       angleAcY = atan(-AcX / sqrt(pow(AcY, 2) + pow(AcZ, 2)));
@@ -686,7 +686,7 @@ class driving{
       totval1 = redValue1 + greenValue1 + blueValue1;
       totval2 = redValue2 + greenValue2 + blueValue2;
       
-      if(!white_flag && (totval1 >= 660) || (totval2 >= 660)){
+      if(!white_flag && ((totval1 >= 660) || (totval2 >= 660))){
         white_flag = true;
         black_time = millis() - black_start_time;
         crosswalk_count += 1;
@@ -705,13 +705,16 @@ class driving{
       // Specification of the interval between white blocks of crosswalks: 1.5 * (white block length) -> 1.5 times the minimum value of 45 cm for safety purposes
       // Time taken to cross the white block of a crosswalk at the average walking speed of an adult male: (distance) / (speed) = 0.45/1.33 = 0.338 seconds
       // Time taken to cross the white block spacing of the crosswalk at the average walking speed of an adult male: 0.508 seconds
-      if((white_time>0) && (white_time<338)){
+      
+      // If you step on the white block as soon as you start driving, the unfair count can be unintentionally counted.
+      // 30 sec for preventing unfair count
+      if(((white_time>0) && (white_time<338)) && (millis() > 30000)){
         crosswalk_warning_count += 1;
         Serial.print("Detection of rapid motion within crosswalks or excessive lane changes. If caught more than three times, account ban will be imposed:");
         Serial.println(crosswalk_warning_count);
       }
 
-      if((black_time>0) && (black_time<508)){
+      if(((black_time>0) && (black_time<508)) && (millis() > 30000)){
         crosswalk_warning_count += 1;
         Serial.print("Detection of rapid motion within crosswalks or excessive lane changes. If caught more than three times, account ban will be imposed:");
         Serial.println(crosswalk_warning_count);
