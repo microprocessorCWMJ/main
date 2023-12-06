@@ -32,14 +32,14 @@ const double RADIAN_TO_DEGREE = 180 / 3.14159;
 const double kickboard_length_cm = 38;
 
 //----------------------------------------------------For Driving Mode--------------------------------------------------//
-// If users change the button to park, driving mode must be false.
+// If users change the button to park, the driving mode must be false.
 bool driving_mode = true;
-// If white color is repetitively detected, on_the_crosswalk flag is set.
-// It names "on_the_crosswalk", but it is also setted when user is changing lane repetitivley.
+// If the white color is repetitively detected, on_the_crosswalk flag is set.
+// It names "on_the_crosswalk", but it is also set when the user is changing lanes repetitively.
 bool on_the_crosswalk = true;
-// If ultrasound is detected objects repetitively, many_objects_around flag is set.
+// If ultrasound detects objects repetitively, many_objects_around flag is set.
 bool many_objects_around = false;
-// If parking is completed, parking completion flag is set.
+// If parking is completed, the parking completion flag is set.
 bool parking_complete = false;
 //----------------------------------------------------------------------------------------------------------------------//
 
@@ -410,11 +410,8 @@ class parking{
       if(on_the_parking_line && parallel_with_beside_kickboard){
         initSensor();
         getAngleY();
-        // 35.26 degree is an error value (experimentally)
-        if(angleAcY != 35.26){
-        }
-        if (AcX != -1 && AcY != -1 && AcZ != -1 && angleAcY != 35.26) {
-          if (angleAcY >= 40 || angleAcY <= -40) {
+        if ((AcX != -1) && (AcY != -1) && (AcZ != -1)) {
+          if ((angleAcY >= 40) || (angleAcY <= -40)) {
             untilted_parking = false;
           }
           else{
@@ -569,10 +566,10 @@ class driving{
       double distance_RightFront = measureDistanceCm(RightFrontpinTrig, RightFrontpinEcho);
       double distance_RightBehind = measureDistanceCm(RightBehindpinTrig, RightBehindpinEcho);
 
-      //Ensuring that there is no distance error or The area that you are in is not an open land.
-      if((distance_LeftFront < 1000 && distance_LeftFront > 0) && (distance_LeftBehind < 1000 && distance_LeftBehind > 0) && (distance_RightFront < 1000 && distance_RightFront > 0) && (distance_RightBehind < 1000 && distance_RightBehind > 0)){
+      //Ensuring that there is no distance error or The area that you are in is not open land.
+      if(((distance_LeftFront < 1000) && (distance_LeftFront > 0)) && ((distance_LeftBehind < 1000 && distance_LeftBehind > 0)) && ((distance_RightFront < 1000 && distance_RightFront > 0)) && ((distance_RightBehind < 1000 && distance_RightBehind > 0))){
         
-        // There is an object, or many objects around you!
+        // There is an object or many objects around you!
         if((distance_LeftFront <= 30) || (distance_LeftBehind <= 30) || (distance_RightFront <= 30) || (distance_RightBehind <= 30)){
           current_time_for_object_detection = millis();
           if(current_time_for_object_detection - previous_time_for_object_detection < 5000){
@@ -581,7 +578,7 @@ class driving{
           previous_time_for_object_detection = current_time_for_object_detection;
         }
         
-        // There is no objects around you
+        // There are no objects around you
         else if((distance_LeftFront > 30) || (distance_LeftBehind > 30) || (distance_RightFront > 30) || (distance_RightBehind > 30)){
           current_time_for_object_detection_end = millis();
           if(current_time_for_object_detection_end - previous_time_for_object_detection_end >= 10000){
@@ -682,7 +679,7 @@ class driving{
       blueValue2 = map(Blue2, B_Min,B_Max,255,0); 
       delay(10);  
 
-      //two color sensors are used located in kickboard's head side
+      //two color sensors are used located in the kickboard's head side
       totval1 = redValue1 + greenValue1 + blueValue1;
       totval2 = redValue2 + greenValue2 + blueValue2;
       
@@ -721,7 +718,7 @@ class driving{
       }
       
       if(crosswalk_count>=3){
-        //on the crosswalk or lane change repeatitively
+        //on the crosswalk or lane change repetitively
         on_the_crosswalk = true;
         if(crosswalk_count == 3){   
           tmp_crosswalk_count = crosswalk_count;
