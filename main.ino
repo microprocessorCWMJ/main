@@ -28,8 +28,8 @@
 const int MPU_ADDR = 0x68;  // Address of MPU6050(imu sensor) for I2C communication
 const double RADIAN_TO_DEGREE = 180 / 3.14159;
 
-// length of kickboard (It needs to be updated)
-const double kickboard_length_cm = 3.5;
+// length of kickboard
+const double kickboard_length_cm = 38;
 
 //----------------------------------------------------For Driving Mode--------------------------------------------------//
 // If users change the button to park, driving mode must be false.
@@ -431,19 +431,19 @@ class driving{
     double angleAcY;
 
     // variables that need to count the number of reckless driving on crosswalk or lane.
-    float tilted_reference_time = 0.0;
-    float tilted_previous_time = 0.0;
-    float tilted_current_time = 0.0;
+    uint32_t tilted_reference_time = 0.0;
+    uint32_t tilted_previous_time = 0.0;
+    uint32_t tilted_current_time = 0.0;
     bool tilt_start_flag = false;
     uint8_t tilted_count = 0;
     uint8_t tilted_warning_count = 0;
     //recklessness: Dangerous driving even if there are detected so many objects(person, vehicle, dog, whatever ... )
     uint8_t tilted_recklessness_count = 0;
 
-    float current_time_for_object_detection = 0.0;
-    float previous_time_for_object_detection = 0.0;
-    float current_time_for_object_detection_end = 0.0;
-    float previous_time_for_object_detection_end = 0.0;
+    uint32_t current_time_for_object_detection = 0.0;
+    uint32_t previous_time_for_object_detection = 0.0;
+    uint32_t current_time_for_object_detection_end = 0.0;
+    uint32_t previous_time_for_object_detection_end = 0.0;
 
     int R_Min = 5; 
     int R_Max = 25; 
@@ -463,7 +463,7 @@ class driving{
     int blueValue1, blueValue2, blueValue3, blueValue4;
     int Frequency;
 
-    float white_time = 0.0, black_time = 0.0, white_start_time = 0.0, black_start_time = 0.0, crosswalk_time;
+    uint32_t white_time = 0.0, black_time = 0.0, white_start_time = 0.0, black_start_time = 0.0, crosswalk_time;
     uint8_t crosswalk_count = 0, crosswalk_warning_count=0, tmp_crosswalk_count;
     uint16_t totval1, totval2;
 
@@ -519,19 +519,19 @@ class driving{
           tilted_warning_count += 1;
           tilted_recklessness_count += 1;
 
-          Serial.println("dangerous and reckless driving detected(more than 3 count = account banned)");
-          Serial.print("dangerous count: ");
+          Serial.println("Dangerous and reckless driving detected. If caught more than three times, account ban will be imposed:");
+          Serial.print("Dangerous count: ");
           Serial.print(tilted_warning_count);
-          Serial.print(", recklessness count: ");
+          Serial.print(", Recklessness count: ");
           Serial.println(tilted_recklessness_count);
           tilted_count = 0;
         }
         else{
           tilted_warning_count += 1;
-          Serial.print("dangerous driving detected(more than 3 count = account banned)");
-          Serial.print("dangerous count: ");
+          Serial.print("Dangerous driving detected. If caught more than three times, account ban will be imposed:");
+          Serial.print("Dangerous count: ");
           Serial.print(tilted_warning_count);
-          Serial.print(", recklessness count: ");
+          Serial.print(", Recklessness count: ");
           Serial.println(tilted_recklessness_count);
           tilted_count = 0;
         }
@@ -539,12 +539,12 @@ class driving{
 
       if(tilted_warning_count >= 3){
         if(tilted_recklessness_count >= 1){
-          Serial.println("reckless driving detected: 3-day account banned");
+          Serial.println("Reckless driving detected: 3-day account banned");
           tilted_warning_count = 0;
           tilted_recklessness_count = 0;
         }
         else{
-          Serial.println("dangerous driving: 1-day account banned");
+          Serial.println("Dangerous driving: 1-day account banned");
           tilted_warning_count = 0;
           tilted_recklessness_count = 0;
         }
@@ -726,7 +726,7 @@ class driving{
         }
 
         if(crosswalk_warning_count>=3){
-          Serial.println("reckless driving detected: 3-day account banned");
+          Serial.println("Reckless driving detected: 3-day account banned");
         }
 
         if(crosswalk_count - tmp_crosswalk_count > 0){
@@ -747,22 +747,25 @@ void switch_mode(){
   pinMode(switch,INPUT_PULLUP);
 
   uint8_t button = digitalRead(switch);
-  if(driving_mode==false && button == 0 ){
+  if(driving_mode==false && button == 0){
     Serial.println("Now Driving");
     driving_mode = true;
   }
   
   else if(driving_mode==true && button == 0){
-    Serial.println("Now Paking");
+    Serial.println("Now Parking");
     driving_mode = false;
   }
 }
 
+// Class declaration before start
 driving driving;
 parking parking;
 
 void setup() {
   // put your setup code here, to run once:
+  pinMode(parking_switch,INPUT_PULLUP);
+
   pinMode(LeftFrontpinTrig, OUTPUT);
   pinMode(LeftFrontpinEcho, INPUT);
   pinMode(LeftBehindpinTrig, OUTPUT);
@@ -771,8 +774,6 @@ void setup() {
   pinMode(RightFrontpinEcho, INPUT);
   pinMode(RightBehindpinTrig, OUTPUT);
   pinMode(RightBehindpinEcho, INPUT);
-  
-  pinMode(parking_switch,INPUT_PULLUP);
   
   pinMode(S2, OUTPUT);    
   pinMode(S3, OUTPUT);      
@@ -789,6 +790,9 @@ void setup() {
 
   Serial.begin(115200);      
   delay(1000);
+
+  if(driving_mode){Serial.println("Initialized to driving mode");}
+  else{Serial.println("Initialized to parking mode");}
 }
 
 void loop() {
@@ -817,7 +821,7 @@ void loop() {
     }
 
     else{
-      if(parking_button == 0 ){
+      if(parking_button == 0){
         if(!on_the_parking_line){
           Serial.println("Please check the parking line.");
         }
@@ -829,7 +833,6 @@ void loop() {
         }
         parking_complete = false;
       }
-
     }
   }
 }
