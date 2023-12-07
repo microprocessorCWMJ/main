@@ -53,34 +53,36 @@ class parking{
   private:
     int16_t AcX, AcY, AcZ;
     double angleAcY;
-    
-    int R_Min1 = 5; 
-    int R_Max1 = 25; 
-    int G_Min1 = 4; 
-    int G_Max1 = 42;
-    int B_Min1 = 4; 
-    int B_Max1 = 45;
 
-    int R_Min2 = 5; 
-    int R_Max2 = 25; 
-    int G_Min2 = 4; 
-    int G_Max2 = 42;
-    int B_Min2 = 4; 
-    int B_Max2 = 45; 
+    //HEAD
+    int R_Min1 = 15; 
+    int R_Max1 = 175; 
+    int G_Min1 = 14; 
+    int G_Max1 = 176;
+    int B_Min1 = 11; 
+    int B_Max1 = 145;
 
-    int R_Min3 = 5; 
-    int R_Max3 = 25; 
-    int G_Min3 = 4; 
-    int G_Max3 = 42;
-    int B_Min3 = 4; 
-    int B_Max3 = 45; 
+    int R_Min2 = 24; 
+    int R_Max2 = 197; 
+    int G_Min2 = 23; 
+    int G_Max2 = 223;
+    int B_Min2 = 18; 
+    int B_Max2 = 179; 
 
-    int R_Min4 = 5; 
-    int R_Max4 = 25; 
-    int G_Min4 = 4; 
-    int G_Max4 = 42;
-    int B_Min4 = 4; 
-    int B_Max4 = 45; 
+    //TALE
+    int R_Min3 = 18; 
+    int R_Max3 = 266; 
+    int G_Min3 = 17; 
+    int G_Max3 = 246;
+    int B_Min3 = 13; 
+    int B_Max3 = 185; 
+
+    int R_Min4 = 28; 
+    int R_Max4 = 400; 
+    int G_Min4 = 19; 
+    int G_Max4 = 366;
+    int B_Min4 = 12; 
+    int B_Max4 = 256; 
 
     int Red1 = 0, Red2 = 0, Red3 = 0, Red4 = 0;
     int Green1 = 0, Green2 = 0, Green3 = 0, Green4 = 4;
