@@ -54,12 +54,33 @@ class parking{
     int16_t AcX, AcY, AcZ;
     double angleAcY;
     
-    int R_Min = 5; 
-    int R_Max = 25; 
-    int G_Min = 4; 
-    int G_Max = 42;
-    int B_Min = 4; 
-    int B_Max = 45; 
+    int R_Min1 = 5; 
+    int R_Max1 = 25; 
+    int G_Min1 = 4; 
+    int G_Max1 = 42;
+    int B_Min1 = 4; 
+    int B_Max1 = 45;
+
+    int R_Min2 = 5; 
+    int R_Max2 = 25; 
+    int G_Min2 = 4; 
+    int G_Max2 = 42;
+    int B_Min2 = 4; 
+    int B_Max2 = 45; 
+
+    int R_Min3 = 5; 
+    int R_Max3 = 25; 
+    int G_Min3 = 4; 
+    int G_Max3 = 42;
+    int B_Min3 = 4; 
+    int B_Max3 = 45; 
+
+    int R_Min4 = 5; 
+    int R_Max4 = 25; 
+    int G_Min4 = 4; 
+    int G_Max4 = 42;
+    int B_Min4 = 4; 
+    int B_Max4 = 45; 
 
     int Red1 = 0, Red2 = 0, Red3 = 0, Red4 = 0;
     int Green1 = 0, Green2 = 0, Green3 = 0, Green4 = 4;
@@ -198,28 +219,28 @@ class parking{
       Red4 = getRed(4);
       // all of the values need to be calibrated. This is temporay value.
       // We should add calibrating code or We should set the min & max value by hand. 
-      redValue1 = map(Red1, R_Min,R_Max,255,0); 
-      redValue2 = map(Red2, R_Min,R_Max,255,0);
-      redValue3 = map(Red3, R_Min,R_Max,255,0);
-      redValue4 = map(Red4, R_Min,R_Max,255,0);
+      redValue1 = map(Red1, R_Min1,R_Max1,255,0); 
+      redValue2 = map(Red2, R_Min2,R_Max2,255,0);
+      redValue3 = map(Red3, R_Min3,R_Max3,255,0);
+      redValue4 = map(Red4, R_Min4,R_Max4,255,0);
 
       Green1 = getGreen(1);
       Green2 = getGreen(2);
       Green3 = getGreen(3);
       Green4 = getGreen(4);
-      greenValue1 = map(Green1, G_Min,G_Max,255,0);
-      greenValue2 = map(Green2, G_Min,G_Max,255,0);
-      greenValue3 = map(Green3, G_Min,G_Max,255,0);
-      greenValue4 = map(Green4, G_Min,G_Max,255,0);
+      greenValue1 = map(Green1, G_Min1,G_Max1,255,0);
+      greenValue2 = map(Green2, G_Min2,G_Max2,255,0);
+      greenValue3 = map(Green3, G_Min3,G_Max3,255,0);
+      greenValue4 = map(Green4, G_Min4,G_Max4,255,0);
 
       Blue1 = getBlue(1);
       Blue2 = getBlue(2);
       Blue3 = getBlue(3);
       Blue4 = getBlue(4);
-      blueValue1 = map(Blue1, B_Min,B_Max,255,0);
-      blueValue2 = map(Blue2, B_Min,B_Max,255,0); 
-      blueValue3 = map(Blue3, B_Min,B_Max,255,0);
-      blueValue4 = map(Blue4, B_Min,B_Max,255,0);
+      blueValue1 = map(Blue1, B_Min1,B_Max1,255,0);
+      blueValue2 = map(Blue2, B_Min2,B_Max2,255,0); 
+      blueValue3 = map(Blue3, B_Min3,B_Max3,255,0);
+      blueValue4 = map(Blue4, B_Min4,B_Max4,255,0);
     
       park();
       
