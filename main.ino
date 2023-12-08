@@ -93,7 +93,7 @@ class parking{
     int blueValue1, blueValue2, blueValue3, blueValue4;
     int Frequency;
 
-    bool park_flag_Red, park_flag_Green, park_flag_Blue; //Total three colors
+    bool park_flag;
   
   public:
     int getRed(int x) {
@@ -170,37 +170,16 @@ class parking{
     }
 
     void park() {
-      // When detect red line
-      // I set the wide range of values. This must be changed.
-      if(169<redValue1 && redValue1<209 && 135<greenValue1 && greenValue1<175 && 155<blueValue1 && blueValue1<195){
-        if(169<redValue2 && redValue2<209 && 135<greenValue2 && greenValue2<175 && 155<blueValue2 && blueValue2<195){
-          if(169<redValue3 && redValue3<209 && 135<greenValue3 && greenValue3<175 && 155<blueValue3 && blueValue3<195){
-            if(169<redValue4 && redValue4<209 && 135<greenValue4 && greenValue4<175 && 155<blueValue4 && blueValue4<195){
-              park_flag_Red = true;
-            }
-          }
-        }
-      }
-
-      // When detect green line
-      // I set the wide range of values. This must be changed.
-      else if(169<redValue1 && redValue1<209 && 135<greenValue1 && greenValue1<175 && 155<blueValue1 && blueValue1<195){ 
-        if(169<redValue2 && redValue2<209 && 135<greenValue2 && greenValue2<175 && 155<blueValue2 && blueValue2<195){
-          if(169<redValue3 && redValue3<209 && 135<greenValue3 && greenValue3<175 && 155<blueValue3 && blueValue3<195){
-            if(169<redValue4 && redValue4<209 && 135<greenValue4 && greenValue4<175 && 155<blueValue4 && blueValue4<195){
-              park_flag_Green = true;
-            }
-          }
-        }
-      }
-
-      // When detect blue line
-      // I set the wide range of values. This must be changed.
-      else if(169<redValue1 && redValue1<209 && 135<greenValue1 && greenValue1<175 && 155<blueValue1 && blueValue1<195){ 
-        if(169<redValue2 && redValue2<209 && 135<greenValue2 && greenValue2<175 && 155<blueValue2 && blueValue2<195){
-          if(169<redValue3 && redValue3<209 && 135<greenValue3 && greenValue3<175 && 155<blueValue3 && blueValue3<195){
-            if(169<redValue4 && redValue4<209 && 135<greenValue4 && greenValue4<175 && 155<blueValue4 && blueValue4<195){
-              park_flag_Blue = true;
+      // When detect color(HEAD-red, TALE-blue)
+      //if(164<redValue1 && redValue1 && greenValue1<68 && 38<blueValue1 && blueValue1<78){
+      if(164<redValue1 &&  greenValue1<68 && blueValue1<78){
+        //if(27<redValue2 && redValue2<67 && 28<greenValue2 && greenValue2<68 && 38<blueValue2 && blueValue2<78){
+        if(164<redValue2 && redValue2 && greenValue2<68 && blueValue2<78){
+          //if(169<redValue3 && redValue3<209 && 135<greenValue3 && greenValue3<175 && 155<blueValue3 && blueValue3<195){
+          if(redValue2<67 && greenValue2<140 && 146< blueValue2){
+            //if(169<redValue4 && redValue4<209 && 135<greenValue4 && greenValue4<175 && 155<blueValue4 && blueValue4<195){
+            if(redValue2<67 && greenValue2<140 && 146< blueValue2){
+              park_flag = true;
             }
           }
         }
@@ -208,9 +187,7 @@ class parking{
 
       // When detected color is not R,G and B.
       else{
-        park_flag_Red = false;
-        park_flag_Green = false;
-        park_flag_Blue = false;
+        park_flag = false;
       }
     }
 
@@ -246,7 +223,7 @@ class parking{
     
       park();
       
-      if(!park_flag_Red && !park_flag_Green && !park_flag_Blue){
+      if(!park_flag){
         on_the_parking_line = false;
       }
       else {
@@ -706,7 +683,7 @@ class driving{
       totval1 = redValue1 + greenValue1 + blueValue1;
       totval2 = redValue2 + greenValue2 + blueValue2;
       
-      if(!white_flag && ((totval1 >= 660) || (totval2 >= 660))){
+      if(!white_flag && ((totval1 >= 720) || (totval2 >= 720))){
         white_flag = true;
         black_time = millis() - black_start_time;
         crosswalk_count += 1;
