@@ -23,7 +23,10 @@
 #define RightBehindpinTrig 34
 #define RightBehindpinEcho 36
 
+#include <LiquidCrystal_I2C.h>
 #include <Wire.h>
+
+LiquidCrystal_I2C lcd(0x27, 16, 2);
 
 const int MPU_ADDR = 0x68;  // Address of MPU6050(imu sensor) for I2C communication
 const double RADIAN_TO_DEGREE = 180 / 3.14159;
@@ -764,6 +767,9 @@ parking parking;
 
 void setup() {
   // put your setup code here, to run once:
+  lcd.init();
+  lcd.backlight();
+  
   pinMode(parking_switch,INPUT_PULLUP);
 
   pinMode(LeftFrontpinTrig, OUTPUT);
@@ -791,8 +797,16 @@ void setup() {
   Serial.begin(115200);      
   delay(1000);
 
-  if(driving_mode){Serial.println("Initialized to driving mode");}
-  else{Serial.println("Initialized to parking mode");}
+  if(driving_mode){
+    Serial.println("Initialized to driving mode");
+    lcd.clear();
+    lcd.print("Initialized to driving mode");
+  }
+  else{
+    Serial.println("Initialized to parking mode");
+    lcd.clear();
+    lcd.print("Initialized to driving mode");
+  }
 }
 
 void loop() {
@@ -815,6 +829,7 @@ void loop() {
     if(untilted_parking && parallel_with_beside_kickboard && on_the_parking_line){
       if(parking_button == 0 ){
         Serial.println("parking complete");
+        lcd.print("parking complete");
         parking_complete = true;
         delay(30000);
       }
@@ -824,12 +839,21 @@ void loop() {
       if(parking_button == 0){
         if(!on_the_parking_line){
           Serial.println("Please check the parking line.");
+          lcd.print("Please check the parking line.");
+          delay(1000);
+          lcd.clear();
         }
         else if(!parallel_with_beside_kickboard){
           Serial.println("Please park parallel to the side kickboard.");
+          lcd.print("Please park parallel to the side kickboard.");
+          delay(1000);
+          lcd.clear();
         }
         else if(!untilted_parking){
           Serial.println("Please park the kickboard parallel to the ground.");
+          lcd.print("Please park the kickboard parallel to the ground.");
+          delay(1000);
+          lcd.clear();
         }
         parking_complete = false;
       }
