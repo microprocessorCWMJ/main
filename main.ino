@@ -25,6 +25,7 @@
 
 #include <LiquidCrystal_I2C.h>
 #include <Wire.h>
+#include <SoftwareSerial.h>
 
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 
@@ -51,6 +52,12 @@ bool untilted_parking = false;
 bool parallel_with_beside_kickboard = false;
 bool on_the_parking_line = false;
 //----------------------------------------------------------------------------------------------------------------------//
+
+//---------------------------------------------------For Parking Mode---------------------------------------------------//
+char btdata
+SoftwareSerial BT(3,2);
+//----------------------------------------------------------------------------------------------------------------------//
+
 
 class parking{
   private:
@@ -747,15 +754,12 @@ class driving{
 };
 
 void switch_mode(){
-  pinMode(switch,INPUT_PULLUP);
-
-  uint8_t button = digitalRead(switch);
-  if(driving_mode==false && button == 0){
+  if(driving_mode==false && btdata == '2'){
     Serial.println("Now Driving");
     driving_mode = true;
   }
   
-  else if(driving_mode==true && button == 0){
+  else if(driving_mode==true && btdata == '3'){
     Serial.println("Now Parking");
     driving_mode = false;
   }
@@ -794,6 +798,7 @@ void setup() {
   pinMode(S34, OUTPUT);      
   pinMode(sensorOut4, INPUT);  
 
+  BT.begin(115200);
   Serial.begin(115200);      
   delay(1000);
 
@@ -810,10 +815,10 @@ void setup() {
 }
 
 void loop() {
+  btdata=BT.read();
+  
   // put your main code here, to run repeatedly:
   switch_mode(); //Push the button to change the mode; 
-  
-  uint8_t parking_button = digitalRead(parking_switch);
 
   if(driving_mode){
     driving.detect_crosswalk();
@@ -827,7 +832,7 @@ void loop() {
     parking.detect_tilted_parking();
 
     if(untilted_parking && parallel_with_beside_kickboard && on_the_parking_line){
-      if(parking_button == 0 ){
+      if(btdata == '1'){
         Serial.println("parking complete");
         lcd.print("parking complete");
         parking_complete = true;
@@ -836,7 +841,7 @@ void loop() {
     }
 
     else{
-      if(parking_button == 0){
+      if(btdata == '1'){
         if(!on_the_parking_line){
           Serial.println("Please check the parking line.");
           lcd.print("Please check the parking line.");
