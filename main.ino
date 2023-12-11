@@ -61,35 +61,32 @@ SoftwareSerial BT(3,2);
 
 //------------------------------------------------------For TCS3200-----------------------------------------------------//
 //HEAD
-int R_Min1 = 15; 
-int R_Max1 = 175; 
-int G_Min1 = 14; 
-int G_Max1 = 176;
-int B_Min1 = 11; 
-int B_Max1 = 145;
-
-int R_Min2 = 24; 
-int R_Max2 = 197; 
-int G_Min2 = 23; 
-int G_Max2 = 223;
-int B_Min2 = 18; 
-int B_Max2 = 179; 
+int R_Min1 = 17; 
+int R_Max1 = 108; 
+int G_Min1 = 16; 
+int G_Max1 = 109;
+int B_Min1 = 13; 
+int B_Max1 = 85;
+int R_Min2 = 22; 
+int R_Max2 = 101; 
+int G_Min2 = 21; 
+int G_Max2 = 106;
+int B_Min2 = 17; 
+int B_Max2 = 81;
 
 //TALE
-int R_Min3 = 18; 
-int R_Max3 = 266; 
-int G_Min3 = 17; 
-int G_Max3 = 246;
-int B_Min3 = 13; 
-int B_Max3 = 185; 
-
-int R_Min4 = 28; 
-int R_Max4 = 400; 
-int G_Min4 = 19; 
-int G_Max4 = 366;
-int B_Min4 = 12; 
-int B_Max4 = 256; 
-
+int R_Min3 = 25; 
+int R_Max3 = 123; 
+int G_Min3 = 24; 
+int G_Max3 = 111;
+int B_Min3 = 18; 
+int B_Max3 = 79;
+int R_Min4 = 15; 
+int R_Max4 = 71; 
+int G_Min4 = 14; 
+int G_Max4 = 67;
+int B_Min4 = 11; 
+int B_Max4 = 48; 
 int Red1 = 0, Red2 = 0, Red3 = 0, Red4 = 0;
 int Green1 = 0, Green2 = 0, Green3 = 0, Green4 = 4;
 int Blue1 = 0, Blue2 = 0, Blue3 = 0, Blue4 = 0;
