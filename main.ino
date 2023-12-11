@@ -59,50 +59,52 @@ char btdata;
 SoftwareSerial BT(3,2);
 //----------------------------------------------------------------------------------------------------------------------//
 
+//------------------------------------------------------For TCS3200-----------------------------------------------------//
+//HEAD
+int R_Min1 = 15; 
+int R_Max1 = 175; 
+int G_Min1 = 14; 
+int G_Max1 = 176;
+int B_Min1 = 11; 
+int B_Max1 = 145;
+
+int R_Min2 = 24; 
+int R_Max2 = 197; 
+int G_Min2 = 23; 
+int G_Max2 = 223;
+int B_Min2 = 18; 
+int B_Max2 = 179; 
+
+//TALE
+int R_Min3 = 18; 
+int R_Max3 = 266; 
+int G_Min3 = 17; 
+int G_Max3 = 246;
+int B_Min3 = 13; 
+int B_Max3 = 185; 
+
+int R_Min4 = 28; 
+int R_Max4 = 400; 
+int G_Min4 = 19; 
+int G_Max4 = 366;
+int B_Min4 = 12; 
+int B_Max4 = 256; 
+
+int Red1 = 0, Red2 = 0, Red3 = 0, Red4 = 0;
+int Green1 = 0, Green2 = 0, Green3 = 0, Green4 = 4;
+int Blue1 = 0, Blue2 = 0, Blue3 = 0, Blue4 = 0;
+
+int redValue1, redValue2, redValue3, redValue4;
+int greenValue1, greenValue2, greenValue3, greenValue4;
+int blueValue1, blueValue2, blueValue3, blueValue4;
+int Frequency;
+//----------------------------------------------------------------------------------------------------------------------//
+
 
 class parking{
   private:
     int16_t AcX, AcY, AcZ;
     double angleAcY;
-
-    //HEAD
-    int R_Min1 = 15; 
-    int R_Max1 = 175; 
-    int G_Min1 = 14; 
-    int G_Max1 = 176;
-    int B_Min1 = 11; 
-    int B_Max1 = 145;
-
-    int R_Min2 = 24; 
-    int R_Max2 = 197; 
-    int G_Min2 = 23; 
-    int G_Max2 = 223;
-    int B_Min2 = 18; 
-    int B_Max2 = 179; 
-
-    //TALE
-    int R_Min3 = 18; 
-    int R_Max3 = 266; 
-    int G_Min3 = 17; 
-    int G_Max3 = 246;
-    int B_Min3 = 13; 
-    int B_Max3 = 185; 
-
-    int R_Min4 = 28; 
-    int R_Max4 = 400; 
-    int G_Min4 = 19; 
-    int G_Max4 = 366;
-    int B_Min4 = 12; 
-    int B_Max4 = 256; 
-
-    int Red1 = 0, Red2 = 0, Red3 = 0, Red4 = 0;
-    int Green1 = 0, Green2 = 0, Green3 = 0, Green4 = 4;
-    int Blue1 = 0, Blue2 = 0, Blue3 = 0, Blue4 = 0;
-
-    int redValue1, redValue2, redValue3, redValue4;
-    int greenValue1, greenValue2, greenValue3, greenValue4;
-    int blueValue1, blueValue2, blueValue3, blueValue4;
-    int Frequency;
 
     bool park_flag;
   
@@ -453,13 +455,6 @@ class driving{
     uint32_t current_time_for_object_detection_end = 0.0;
     uint32_t previous_time_for_object_detection_end = 0.0;
 
-    int R_Min = 5; 
-    int R_Max = 25; 
-    int G_Min = 4; 
-    int G_Max = 42;
-    int B_Min = 4; 
-    int B_Max = 45; 
-
     /*Define int variables*/
     int Red1, Red2, Red3, Red4;
     int Green1, Green2, Green3, Green4;
@@ -675,19 +670,19 @@ class driving{
     void detect_crosswalk(){
       Red1 = getRed(1);
       Red2 = getRed(2);
-      redValue1 = map(Red1, R_Min,R_Max,255,0);
-      redValue2 = map(Red2, R_Min,R_Max,255,0); // all of the values need to be calibrated. This is temporay value. 
+      redValue1 = map(Red1, R_Min1,R_Max1,255,0);
+      redValue2 = map(Red2, R_Min2,R_Max2,255,0); // all of the values need to be calibrated. This is temporay value. 
       //We should add calibrating code or We should set the min & max value by hand.
       delay(10);
       Green1 = getGreen(1);
       Green2 = getGreen(2);
-      greenValue1 = map(Green1, G_Min,G_Max,255,0);
-      greenValue2 = map(Green2, G_Min,G_Max,255,0);
+      greenValue1 = map(Green1, G_Min1,G_Max1,255,0);
+      greenValue2 = map(Green2, G_Min2,G_Max2,255,0);
       delay(10);
       Blue1 = getBlue(1);
       Blue2 = getBlue(2);
-      blueValue1 = map(Blue1, B_Min,B_Max,255,0); 
-      blueValue2 = map(Blue2, B_Min,B_Max,255,0); 
+      blueValue1 = map(Blue1, B_Min1,B_Max1,255,0); 
+      blueValue2 = map(Blue2, B_Min2,B_Max2,255,0); 
       delay(10);  
 
       //two color sensors are used located in the kickboard's head side
