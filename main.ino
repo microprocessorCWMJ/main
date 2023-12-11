@@ -23,9 +23,10 @@
 #define RightBehindpinTrig 34
 #define RightBehindpinEcho 36
 
+#define BT Serial3 //Txd to pin 15 Rxd to pin 14
+
 #include <LiquidCrystal_I2C.h>
 #include <Wire.h>
-#include <SoftwareSerial.h>
 
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 
