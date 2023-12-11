@@ -23,7 +23,11 @@
 #define RightBehindpinTrig 34
 #define RightBehindpinEcho 36
 
+#include <LiquidCrystal_I2C.h>
 #include <Wire.h>
+#include <SoftwareSerial.h>
+
+LiquidCrystal_I2C lcd(0x27, 16, 2);
 
 const int MPU_ADDR = 0x68;  // Address of MPU6050(imu sensor) for I2C communication
 const double RADIAN_TO_DEGREE = 180 / 3.14159;
@@ -32,14 +36,14 @@ const double RADIAN_TO_DEGREE = 180 / 3.14159;
 const double kickboard_length_cm = 38;
 
 //----------------------------------------------------For Driving Mode--------------------------------------------------//
-// If users change the button to park, driving mode must be false.
+// If users change the button to park, the driving mode must be false.
 bool driving_mode = true;
-// If white color is repetitively detected, on_the_crosswalk flag is set.
-// It names "on_the_crosswalk", but it is also setted when user is changing lane repetitivley.
-bool on_the_crosswalk = true;
-// If ultrasound is detected objects repetitively, many_objects_around flag is set.
+// If the white color is repetitively detected, on_the_crosswalk flag is set.
+// It names "on_the_crosswalk", but it is also set when the user is changing lanes repetitively.
+bool on_the_crosswalk = false;
+// If ultrasound detects objects repetitively, many_objects_around flag is set.
 bool many_objects_around = false;
-// If parking is completed, parking completion flag is set.
+// If parking is completed, the parking completion flag is set.
 bool parking_complete = false;
 //----------------------------------------------------------------------------------------------------------------------//
 
@@ -49,17 +53,46 @@ bool parallel_with_beside_kickboard = false;
 bool on_the_parking_line = false;
 //----------------------------------------------------------------------------------------------------------------------//
 
+//----------------------------------------------For Bluetooth Communication---------------------------------------------//
+char btdata;
+SoftwareSerial BT(3,2);
+//----------------------------------------------------------------------------------------------------------------------//
+
+
 class parking{
   private:
     int16_t AcX, AcY, AcZ;
     double angleAcY;
-    
-    int R_Min = 5; 
-    int R_Max = 25; 
-    int G_Min = 4; 
-    int G_Max = 42;
-    int B_Min = 4; 
-    int B_Max = 45; 
+
+    //HEAD
+    int R_Min1 = 15; 
+    int R_Max1 = 175; 
+    int G_Min1 = 14; 
+    int G_Max1 = 176;
+    int B_Min1 = 11; 
+    int B_Max1 = 145;
+
+    int R_Min2 = 24; 
+    int R_Max2 = 197; 
+    int G_Min2 = 23; 
+    int G_Max2 = 223;
+    int B_Min2 = 18; 
+    int B_Max2 = 179; 
+
+    //TALE
+    int R_Min3 = 18; 
+    int R_Max3 = 266; 
+    int G_Min3 = 17; 
+    int G_Max3 = 246;
+    int B_Min3 = 13; 
+    int B_Max3 = 185; 
+
+    int R_Min4 = 28; 
+    int R_Max4 = 400; 
+    int G_Min4 = 19; 
+    int G_Max4 = 366;
+    int B_Min4 = 12; 
+    int B_Max4 = 256; 
 
     int Red1 = 0, Red2 = 0, Red3 = 0, Red4 = 0;
     int Green1 = 0, Green2 = 0, Green3 = 0, Green4 = 4;
@@ -70,29 +103,29 @@ class parking{
     int blueValue1, blueValue2, blueValue3, blueValue4;
     int Frequency;
 
-    bool park_flag_Red, park_flag_Green, park_flag_Blue; //Total three colors
+    bool park_flag;
   
   public:
     int getRed(int x) {
       if(x==1){
         digitalWrite(S2,LOW);
         digitalWrite(S3,LOW);
-        Frequency = pulseIn(sensorOut1, LOW);
+        Frequency = pulseIn(sensorOut1, LOW, 1000);
       }
       else if(x==2){
         digitalWrite(S22,LOW);
         digitalWrite(S32,LOW);
-        Frequency = pulseIn(sensorOut2, LOW);
+        Frequency = pulseIn(sensorOut2, LOW, 1000);
       }
       else if(x==3){
         digitalWrite(S23,LOW);
         digitalWrite(S33,LOW);
-        Frequency = pulseIn(sensorOut3, LOW);
+        Frequency = pulseIn(sensorOut3, LOW, 1000);
       }
       else if(x==4){
         digitalWrite(S24,LOW);
         digitalWrite(S34,LOW);
-        Frequency = pulseIn(sensorOut4, LOW);
+        Frequency = pulseIn(sensorOut4, LOW, 1000);
       }
 
       return Frequency;
@@ -102,82 +135,61 @@ class parking{
       if(x==1){
         digitalWrite(S2,HIGH);
         digitalWrite(S3,HIGH);
-        Frequency = pulseIn(sensorOut1, LOW);
+        Frequency = pulseIn(sensorOut1, LOW, 1000);
       }
       else if(x==2){
         digitalWrite(S22,HIGH);
         digitalWrite(S32,HIGH);
-        Frequency = pulseIn(sensorOut2, LOW);
+        Frequency = pulseIn(sensorOut2, LOW, 1000);
       }
       else if(x==3){
         digitalWrite(S23,HIGH);
         digitalWrite(S33,HIGH);
-        Frequency = pulseIn(sensorOut3, LOW);
+        Frequency = pulseIn(sensorOut3, LOW, 1000);
       }
       else if(x==4){
         digitalWrite(S24,HIGH);
         digitalWrite(S34,HIGH);
-        Frequency = pulseIn(sensorOut4, LOW);
+        Frequency = pulseIn(sensorOut4, LOW, 1000);
       }
       return Frequency;
     }
 
     int getBlue(int x) {
       if(x==1){
-      digitalWrite(S2,LOW);
-      digitalWrite(S3,HIGH);
-      Frequency = pulseIn(sensorOut1, LOW);
+        digitalWrite(S2,LOW);
+        digitalWrite(S3,HIGH);
+        Frequency = pulseIn(sensorOut1, LOW, 1000);
       }
       else if(x==2){
-      digitalWrite(S22,LOW);
-      digitalWrite(S32,HIGH);
-      Frequency = pulseIn(sensorOut2, LOW);
+        digitalWrite(S22,LOW);
+        digitalWrite(S32,HIGH);
+        Frequency = pulseIn(sensorOut2, LOW, 1000);
       }
       else if(x==3){
-      digitalWrite(S23,LOW);
-      digitalWrite(S33,HIGH);
-      Frequency = pulseIn(sensorOut3, LOW);
+        digitalWrite(S23,LOW);
+        digitalWrite(S33,HIGH);
+        Frequency = pulseIn(sensorOut3, LOW, 1000);
       }
       else if(x==4){
         digitalWrite(S24,LOW);
         digitalWrite(S34,HIGH);
-        Frequency = pulseIn(sensorOut4, LOW);
+        Frequency = pulseIn(sensorOut4, LOW, 1000);
       }
       return Frequency;
     }
 
     void park() {
-      // When detect red line
-      // I set the wide range of values. This must be changed.
-      if(169<redValue1 && redValue1<209 && 135<greenValue1 && greenValue1<175 && 155<blueValue1 && blueValue1<195){
-        if(169<redValue2 && redValue2<209 && 135<greenValue2 && greenValue2<175 && 155<blueValue2 && blueValue2<195){
-          if(169<redValue3 && redValue3<209 && 135<greenValue3 && greenValue3<175 && 155<blueValue3 && blueValue3<195){
-            if(169<redValue4 && redValue4<209 && 135<greenValue4 && greenValue4<175 && 155<blueValue4 && blueValue4<195){
-              park_flag_Red = true;
-            }
-          }
-        }
-      }
-
-      // When detect green line
-      // I set the wide range of values. This must be changed.
-      else if(169<redValue1 && redValue1<209 && 135<greenValue1 && greenValue1<175 && 155<blueValue1 && blueValue1<195){ 
-        if(169<redValue2 && redValue2<209 && 135<greenValue2 && greenValue2<175 && 155<blueValue2 && blueValue2<195){
-          if(169<redValue3 && redValue3<209 && 135<greenValue3 && greenValue3<175 && 155<blueValue3 && blueValue3<195){
-            if(169<redValue4 && redValue4<209 && 135<greenValue4 && greenValue4<175 && 155<blueValue4 && blueValue4<195){
-              park_flag_Green = true;
-            }
-          }
-        }
-      }
-
-      // When detect blue line
-      // I set the wide range of values. This must be changed.
-      else if(169<redValue1 && redValue1<209 && 135<greenValue1 && greenValue1<175 && 155<blueValue1 && blueValue1<195){ 
-        if(169<redValue2 && redValue2<209 && 135<greenValue2 && greenValue2<175 && 155<blueValue2 && blueValue2<195){
-          if(169<redValue3 && redValue3<209 && 135<greenValue3 && greenValue3<175 && 155<blueValue3 && blueValue3<195){
-            if(169<redValue4 && redValue4<209 && 135<greenValue4 && greenValue4<175 && 155<blueValue4 && blueValue4<195){
-              park_flag_Blue = true;
+      // When detect color(HEAD-red, TALE-blue)
+      //if(164<redValue1 && redValue1 && greenValue1<68 && 38<blueValue1 && blueValue1<78){
+      if(164<redValue1 &&  greenValue1<68 && blueValue1<78){
+        //if(27<redValue2 && redValue2<67 && 28<greenValue2 && greenValue2<68 && 38<blueValue2 && blueValue2<78){
+        if(164<redValue2 && redValue2 && greenValue2<68 && blueValue2<78){
+          //if(169<redValue3 && redValue3<209 && 135<greenValue3 && greenValue3<175 && 155<blueValue3 && blueValue3<195){
+          if(redValue2<67 && greenValue2<140 && 146< blueValue2){
+            //if(169<redValue4 && redValue4<209 && 135<greenValue4 && greenValue4<175 && 155<blueValue4 && blueValue4<195){
+            if(redValue2<67 && greenValue2<140 && 146< blueValue2){
+              park_flag = true;
             }
           }
         }
@@ -185,9 +197,7 @@ class parking{
 
       // When detected color is not R,G and B.
       else{
-        park_flag_Red = false;
-        park_flag_Green = false;
-        park_flag_Blue = false;
+        park_flag = false;
       }
     }
 
@@ -198,32 +208,32 @@ class parking{
       Red4 = getRed(4);
       // all of the values need to be calibrated. This is temporay value.
       // We should add calibrating code or We should set the min & max value by hand. 
-      redValue1 = map(Red1, R_Min,R_Max,255,0); 
-      redValue2 = map(Red2, R_Min,R_Max,255,0);
-      redValue3 = map(Red3, R_Min,R_Max,255,0);
-      redValue4 = map(Red4, R_Min,R_Max,255,0);
+      redValue1 = map(Red1, R_Min1,R_Max1,255,0); 
+      redValue2 = map(Red2, R_Min2,R_Max2,255,0);
+      redValue3 = map(Red3, R_Min3,R_Max3,255,0);
+      redValue4 = map(Red4, R_Min4,R_Max4,255,0);
 
       Green1 = getGreen(1);
       Green2 = getGreen(2);
       Green3 = getGreen(3);
       Green4 = getGreen(4);
-      greenValue1 = map(Green1, G_Min,G_Max,255,0);
-      greenValue2 = map(Green2, G_Min,G_Max,255,0);
-      greenValue3 = map(Green3, G_Min,G_Max,255,0);
-      greenValue4 = map(Green4, G_Min,G_Max,255,0);
+      greenValue1 = map(Green1, G_Min1,G_Max1,255,0);
+      greenValue2 = map(Green2, G_Min2,G_Max2,255,0);
+      greenValue3 = map(Green3, G_Min3,G_Max3,255,0);
+      greenValue4 = map(Green4, G_Min4,G_Max4,255,0);
 
       Blue1 = getBlue(1);
       Blue2 = getBlue(2);
       Blue3 = getBlue(3);
       Blue4 = getBlue(4);
-      blueValue1 = map(Blue1, B_Min,B_Max,255,0);
-      blueValue2 = map(Blue2, B_Min,B_Max,255,0); 
-      blueValue3 = map(Blue3, B_Min,B_Max,255,0);
-      blueValue4 = map(Blue4, B_Min,B_Max,255,0);
+      blueValue1 = map(Blue1, B_Min1,B_Max1,255,0);
+      blueValue2 = map(Blue2, B_Min2,B_Max2,255,0); 
+      blueValue3 = map(Blue3, B_Min3,B_Max3,255,0);
+      blueValue4 = map(Blue4, B_Min4,B_Max4,255,0);
     
       park();
       
-      if(!park_flag_Red && !park_flag_Green && !park_flag_Blue){
+      if(!park_flag){
         on_the_parking_line = false;
       }
       else {
@@ -238,7 +248,7 @@ class parking{
       delayMicroseconds(10);
       digitalWrite(pinTrig, LOW);
       
-      double duration = pulseIn(pinEcho, HIGH);
+      double duration = pulseIn(pinEcho, HIGH, 1000);
       double cm = 0.0343 * (duration/2);
       return cm;
     }
@@ -410,11 +420,8 @@ class parking{
       if(on_the_parking_line && parallel_with_beside_kickboard){
         initSensor();
         getAngleY();
-        // 35.26 degree is an error value (experimentally)
-        if(angleAcY != 35.26){
-        }
-        if (AcX != -1 && AcY != -1 && AcZ != -1 && angleAcY != 35.26) {
-          if (angleAcY >= 40 || angleAcY <= -40) {
+        if ((AcX != -1) && (AcY != -1) && (AcZ != -1)) {
+          if ((angleAcY >= 40) || (angleAcY <= -40)) {
             untilted_parking = false;
           }
           else{
@@ -557,7 +564,7 @@ class driving{
       digitalWrite(pinTrig, HIGH);
       delayMicroseconds(10);
       digitalWrite(pinTrig, LOW);
-      double duration = pulseIn(pinEcho, HIGH);
+      double duration = pulseIn(pinEcho, HIGH, 1000);
       double cm = 0.0343 * (duration/2);
       return cm;
     }
@@ -569,10 +576,10 @@ class driving{
       double distance_RightFront = measureDistanceCm(RightFrontpinTrig, RightFrontpinEcho);
       double distance_RightBehind = measureDistanceCm(RightBehindpinTrig, RightBehindpinEcho);
 
-      //Ensuring that there is no distance error or The area that you are in is not an open land.
-      if((distance_LeftFront < 1000 && distance_LeftFront > 0) && (distance_LeftBehind < 1000 && distance_LeftBehind > 0) && (distance_RightFront < 1000 && distance_RightFront > 0) && (distance_RightBehind < 1000 && distance_RightBehind > 0)){
+      //Ensuring that there is no distance error or The area that you are in is not open land.
+      if(((distance_LeftFront < 1000) && (distance_LeftFront > 0)) && ((distance_LeftBehind < 1000 && distance_LeftBehind > 0)) && ((distance_RightFront < 1000 && distance_RightFront > 0)) && ((distance_RightBehind < 1000 && distance_RightBehind > 0))){
         
-        // There is an object, or many objects around you!
+        // There is an object or many objects around you!
         if((distance_LeftFront <= 30) || (distance_LeftBehind <= 30) || (distance_RightFront <= 30) || (distance_RightBehind <= 30)){
           current_time_for_object_detection = millis();
           if(current_time_for_object_detection - previous_time_for_object_detection < 5000){
@@ -581,7 +588,7 @@ class driving{
           previous_time_for_object_detection = current_time_for_object_detection;
         }
         
-        // There is no objects around you
+        // There are no objects around you
         else if((distance_LeftFront > 30) || (distance_LeftBehind > 30) || (distance_RightFront > 30) || (distance_RightBehind > 30)){
           current_time_for_object_detection_end = millis();
           if(current_time_for_object_detection_end - previous_time_for_object_detection_end >= 10000){
@@ -596,22 +603,22 @@ class driving{
       if(x==1){
         digitalWrite(S2,LOW);
         digitalWrite(S3,LOW);
-        Frequency = pulseIn(sensorOut1, LOW);
+        Frequency = pulseIn(sensorOut1, LOW, 1000);
       }
       else if(x==2){
         digitalWrite(S22,LOW);
         digitalWrite(S32,LOW);
-        Frequency = pulseIn(sensorOut2, LOW);
+        Frequency = pulseIn(sensorOut2, LOW, 1000);
       }
       else if(x==3){
         digitalWrite(S23,LOW);
         digitalWrite(S33,LOW);
-        Frequency = pulseIn(sensorOut3, LOW);
+        Frequency = pulseIn(sensorOut3, LOW, 1000);
       }
       else if(x==4){
         digitalWrite(S24,LOW);
         digitalWrite(S34,LOW);
-        Frequency = pulseIn(sensorOut4, LOW);
+        Frequency = pulseIn(sensorOut4, LOW, 1000);
       }
       return Frequency;
     }
@@ -620,22 +627,22 @@ class driving{
       if(x==1){
         digitalWrite(S2,HIGH);
         digitalWrite(S3,HIGH);
-        Frequency = pulseIn(sensorOut1, LOW);
+        Frequency = pulseIn(sensorOut1, LOW, 1000);
       }
       else if(x==2){
         digitalWrite(S22,HIGH);
         digitalWrite(S32,HIGH);
-        Frequency = pulseIn(sensorOut2, LOW);
+        Frequency = pulseIn(sensorOut2, LOW, 1000);
       }
       else if(x==3){
         digitalWrite(S23,HIGH);
         digitalWrite(S33,HIGH);
-        Frequency = pulseIn(sensorOut3, LOW);
+        Frequency = pulseIn(sensorOut3, LOW, 1000);
       }
       else if(x==4){
         digitalWrite(S24,HIGH);
         digitalWrite(S34,HIGH);
-        Frequency = pulseIn(sensorOut4, LOW);
+        Frequency = pulseIn(sensorOut4, LOW, 1000);
       }
       return Frequency;
     }
@@ -644,22 +651,22 @@ class driving{
       if(x==1){
       digitalWrite(S2,LOW);
       digitalWrite(S3,HIGH);
-      Frequency = pulseIn(sensorOut1, LOW);
+      Frequency = pulseIn(sensorOut1, LOW, 1000);
       }
       else if(x==2){
       digitalWrite(S22,LOW);
       digitalWrite(S32,HIGH);
-      Frequency = pulseIn(sensorOut2, LOW);
+      Frequency = pulseIn(sensorOut2, LOW, 1000);
       }
       else if(x==3){
       digitalWrite(S23,LOW);
       digitalWrite(S33,HIGH);
-      Frequency = pulseIn(sensorOut3, LOW);
+      Frequency = pulseIn(sensorOut3, LOW, 1000);
       }
       else if(x==4){
         digitalWrite(S24,LOW);
         digitalWrite(S34,HIGH);
-        Frequency = pulseIn(sensorOut4, LOW);
+        Frequency = pulseIn(sensorOut4, LOW, 1000);
       }
       return Frequency;
     }
@@ -682,11 +689,11 @@ class driving{
       blueValue2 = map(Blue2, B_Min,B_Max,255,0); 
       delay(10);  
 
-      //two color sensors are used located in kickboard's head side
+      //two color sensors are used located in the kickboard's head side
       totval1 = redValue1 + greenValue1 + blueValue1;
       totval2 = redValue2 + greenValue2 + blueValue2;
       
-      if(!white_flag && ((totval1 >= 660) || (totval2 >= 660))){
+      if(!white_flag && ((totval1 >= 720) || (totval2 >= 720))){
         white_flag = true;
         black_time = millis() - black_start_time;
         crosswalk_count += 1;
@@ -721,7 +728,7 @@ class driving{
       }
       
       if(crosswalk_count>=3){
-        //on the crosswalk or lane change repeatitively
+        //on the crosswalk or lane change repetitively
         on_the_crosswalk = true;
         if(crosswalk_count == 3){   
           tmp_crosswalk_count = crosswalk_count;
@@ -747,15 +754,12 @@ class driving{
 };
 
 void switch_mode(){
-  pinMode(switch,INPUT_PULLUP);
-
-  uint8_t button = digitalRead(switch);
-  if(driving_mode==false && button == 0){
+  if(driving_mode==false && btdata == '2'){
     Serial.println("Now Driving");
     driving_mode = true;
   }
   
-  else if(driving_mode==true && button == 0){
+  else if(driving_mode==true && btdata == '3'){
     Serial.println("Now Parking");
     driving_mode = false;
   }
@@ -767,7 +771,8 @@ parking parking;
 
 void setup() {
   // put your setup code here, to run once:
-  pinMode(parking_switch,INPUT_PULLUP);
+  lcd.init();
+  lcd.backlight();
 
   pinMode(LeftFrontpinTrig, OUTPUT);
   pinMode(LeftFrontpinEcho, INPUT);
@@ -791,18 +796,27 @@ void setup() {
   pinMode(S34, OUTPUT);      
   pinMode(sensorOut4, INPUT);  
 
+  BT.begin(115200);
   Serial.begin(115200);      
   delay(1000);
 
-  if(driving_mode){Serial.println("Initialized to driving mode");}
-  else{Serial.println("Initialized to parking mode");}
+  if(driving_mode){
+    Serial.println("Initialized to driving mode");
+    lcd.clear();
+    lcd.print("Initialized to driving mode");
+  }
+  else{
+    Serial.println("Initialized to parking mode");
+    lcd.clear();
+    lcd.print("Initialized to driving mode");
+  }
 }
 
 void loop() {
+  btdata=BT.read();
+  
   // put your main code here, to run repeatedly:
   switch_mode(); //Push the button to change the mode; 
-  
-  uint8_t parking_button = digitalRead(parking_switch);
 
   if(driving_mode){
     driving.detect_crosswalk();
@@ -816,23 +830,33 @@ void loop() {
     parking.detect_tilted_parking();
 
     if(untilted_parking && parallel_with_beside_kickboard && on_the_parking_line){
-      if(parking_button == 0 ){
+      if(btdata == '1'){
         Serial.println("parking complete");
+        lcd.print("parking complete");
         parking_complete = true;
         delay(30000);
       }
     }
 
     else{
-      if(parking_button == 0){
+      if(btdata == '1'){
         if(!on_the_parking_line){
           Serial.println("Please check the parking line.");
+          lcd.print("Please check the parking line.");
+          delay(1000);
+          lcd.clear();
         }
         else if(!parallel_with_beside_kickboard){
           Serial.println("Please park parallel to the side kickboard.");
+          lcd.print("Please park parallel to the side kickboard.");
+          delay(1000);
+          lcd.clear();
         }
         else if(!untilted_parking){
           Serial.println("Please park the kickboard parallel to the ground.");
+          lcd.print("Please park the kickboard parallel to the ground.");
+          delay(1000);
+          lcd.clear();
         }
         parking_complete = false;
       }
