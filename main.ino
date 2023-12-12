@@ -56,19 +56,18 @@ bool on_the_parking_line = false;
 
 //---------------------------------------------------For Parking Mode---------------------------------------------------//
 char btdata;
-SoftwareSerial BT(3,2);
 //----------------------------------------------------------------------------------------------------------------------//
 
 //------------------------------------------------------For TCS3200-----------------------------------------------------//
 
 //HEAD
-int R_Min1 = 17; 
-int R_Max1 = 108; 
-int G_Min1 = 16; 
-int G_Max1 = 109;
-int B_Min1 = 13; 
-int B_Max1 = 85;
-int R_Min2 = 22; 
+int R_Min1 = 21; 
+int R_Max1 = 134; 
+int G_Min1 = 20; 
+int G_Max1 = 137;
+int B_Min1 = 20; 
+int B_Max1 = 106;
+int R_Min2 = 16; 
 int R_Max2 = 101; 
 int G_Min2 = 21; 
 int G_Max2 = 106;
@@ -76,18 +75,18 @@ int B_Min2 = 17;
 int B_Max2 = 81;
 
 //TALE
-int R_Min3 = 25; 
-int R_Max3 = 123; 
-int G_Min3 = 24; 
-int G_Max3 = 111;
-int B_Min3 = 18; 
-int B_Max3 = 79;
-int R_Min4 = 15; 
-int R_Max4 = 71; 
-int G_Min4 = 14; 
-int G_Max4 = 67;
-int B_Min4 = 11; 
-int B_Max4 = 48; 
+int R_Min3 = 7; 
+int R_Max3 = 73; 
+int G_Min3 = 7; 
+int G_Max3 = 69;
+int B_Min3 = 5; 
+int B_Max3 = 51;
+int R_Min4 = 8; 
+int R_Max4 = 58; 
+int G_Min4 = 7; 
+int G_Max4 = 54;
+int B_Min4 = 6; 
+int B_Max4 = 40; 
 
 int Red1 = 0, Red2 = 0, Red3 = 0, Red4 = 0;
 int Green1 = 0, Green2 = 0, Green3 = 0, Green4 = 4;
@@ -186,11 +185,11 @@ class parking{
       //if(164<redValue1 && redValue1 && greenValue1<68 && 38<blueValue1 && blueValue1<78){
       if(164<redValue1 &&  greenValue1<68 && blueValue1<78){
         //if(27<redValue2 && redValue2<67 && 28<greenValue2 && greenValue2<68 && 38<blueValue2 && blueValue2<78){
-        if(164<redValue2 && redValue2 && greenValue2<68 && blueValue2<78){
+        if(164<redValue2 && greenValue2<68 && blueValue2<78){
           //if(169<redValue3 && redValue3<209 && 135<greenValue3 && greenValue3<175 && 155<blueValue3 && blueValue3<195){
-          if(redValue2<67 && greenValue2<140 && 146< blueValue2){
+          if(redValue3<67 && greenValue3<180 && 180< blueValue3){
             //if(169<redValue4 && redValue4<209 && 135<greenValue4 && greenValue4<175 && 155<blueValue4 && blueValue4<195){
-            if(redValue2<67 && greenValue2<140 && 146< blueValue2){
+            if(redValue4<67 && greenValue4<180 && 180< blueValue4){
               park_flag = true;
             }
           }
