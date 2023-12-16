@@ -759,6 +759,254 @@ void switch_mode(){
   }
 }
 
+void fre(){
+  
+  detect_parking_line();
+
+
+//1111111111111111111111111
+  Serial.print("1 = ");
+  Serial.print("R_f: ");
+  Serial.print(Red1);
+  Serial.print(" ");
+  Serial.print("G_f: ");
+  Serial.print(Green1);
+  Serial.print(" ");
+  Serial.print("B_f: ");
+  Serial.print(Blue1);
+  Serial.println(" ");
+
+  delay(100);
+
+
+//22222222222222222222222222
+  Serial.print("2 = ");
+  Serial.print("    ");
+  Serial.print("R_f: ");
+  Serial.print(Red2);
+  Serial.print(" ");
+  Serial.print("G_f: ");
+  Serial.print(Green2);
+  Serial.print(" ");
+  Serial.print("B_f: ");
+  Serial.print(Blue2);
+  Serial.println(" ");
+
+
+  delay(100);
+
+
+//333333333333333333333333333
+  Serial.print("3 = ");
+  Serial.print("R_f: ");
+  Serial.print(Red3);
+  Serial.print(" ");
+  Serial.print("G_f: ");
+  Serial.print(Green3);
+  Serial.print(" ");
+  Serial.print("B_f: ");
+  Serial.print(Blue3);
+  Serial.println(" ");
+
+  delay(100);
+
+//4444444444444444444444444444
+  Serial.print("4 = ");
+  Serial.print("R_f: ");
+  Serial.print(Red4);
+  Serial.print(" ");
+  Serial.print("G_f: ");
+  Serial.print(Green4);
+  Serial.print(" ");
+  Serial.print("B_f: ");
+  Serial.print(Blue4);
+  Serial.println(" ");
+
+  delay(100);
+}
+
+void calibrate(){
+  bool black_flag=true;
+  float current_time=0;
+  Serial.println("Put black paper under TCS3200");
+  delay(5000);
+
+  current_time = millis();
+
+  if(black_flag==true){
+    while((millis()-current_time)<=10000){
+      fre();
+      if(getRed(1)>R_Max1){
+        R_Max1=getRed(1);
+      }
+      if(getRed(2)>R_Max2){
+        R_Max2=getRed(2);
+      }
+      if(getRed(3)>R_Max3){
+        R_Max3=getRed(3);
+      }
+      if(getRed(4)>R_Max4){
+        R_Max4=getRed(4);
+      }
+
+      if(getGreen(1)>G_Max1){
+        G_Max1=getGreen(1);
+      }
+      if(getGreen(2)>G_Max2){
+        G_Max2=getGreen(2);
+      }
+      if(getGreen(3)>G_Max3){
+        G_Max3=getGreen(3);
+      }
+      if(getGreen(4)>G_Max4){
+        G_Max4=getGreen(4);
+      }
+
+      if(getBlue(1)>B_Max1){
+        B_Max1=getBlue(1);
+      }
+      if(getBlue(2)>B_Max2){
+        B_Max2=getBlue(2);
+      }
+      if(getBlue(3)>B_Max3){
+        B_Max3=getBlue(3);
+      }
+      if(getBlue(4)>B_Max4){
+        B_Max4=getBlue(4);
+      }
+    }
+    black_flag=false;
+  }
+
+  Serial.println("Put white paper under TCS3200");
+
+  delay(5000);
+
+  current_time = millis();
+  if(black_flag==false){
+    while((millis()-current_time)<=10000){
+      fre();
+      if(getRed(1)<R_Min1){
+        R_Min1=getRed(1);
+      }
+      if(getRed(2)<R_Min2){
+        R_Min2=getRed(2);
+      }
+      if(getRed(3)<R_Min3){
+        R_Min3=getRed(3);
+      }
+      if(getRed(4)<R_Min4){
+        R_Min4=getRed(4);
+      }
+
+      if(getGreen(1)<G_Min1){
+        G_Min1=getGreen(1);
+      }
+      if(getGreen(2)<G_Min2){
+        G_Min2=getGreen(2);
+      }
+      if(getGreen(3)<G_Min3){
+        G_Min3=getGreen(3);
+      }
+      if(getGreen(4)<G_Min4){
+        G_Min4=getGreen(4);
+      }
+
+      if(getBlue(1)<B_Min1){
+        B_Min1=getBlue(1);
+      }
+      if(getBlue(2)<B_Min2){
+        B_Min2=getBlue(2);
+      }
+      if(getBlue(3)<B_Min3){
+        B_Min3=getBlue(3);
+      }
+      if(getBlue(4)<B_Min4){
+        B_Min4=getBlue(4);
+      }
+    }
+    black_flag=true;
+  }
+  Serial.print("R_Max1: ");
+  Serial.print(R_Max1);
+  Serial.print(" ");
+  Serial.print("G_Max1: ");
+  Serial.print(G_Max1);
+  Serial.print(" ");
+  Serial.print("B_Max1: ");
+  Serial.print(B_Max1);
+  Serial.print("    ");
+  Serial.print("R_Min1: ");
+  Serial.print(R_Min1);
+  Serial.print(" ");
+  Serial.print("G_Min1: ");
+  Serial.print(G_Min1);
+  Serial.print(" ");
+  Serial.print("B_Min1: ");
+  Serial.println(B_Min1);
+
+  Serial.print("R_Max2: ");
+  Serial.print(R_Max2);
+  Serial.print(" ");
+  Serial.print("G_Max2: ");
+  Serial.print(G_Max2);
+  Serial.print(" ");
+  Serial.print("B_Max2: ");
+  Serial.print(B_Max2);
+  Serial.print("    ");
+  Serial.print("R_Min2: ");
+  Serial.print(R_Min2);
+  Serial.print(" ");
+  Serial.print("G_Min2: ");
+  Serial.print(G_Min2);
+  Serial.print(" ");
+  Serial.print("B_Min2: ");
+  Serial.println(B_Min2);
+
+
+  Serial.print("R_Max3: ");
+  Serial.print(R_Max3);
+  Serial.print(" ");
+  Serial.print("G_Max3: ");
+  Serial.print(G_Max3);
+  Serial.print(" ");
+  Serial.print("B_Max3: ");
+  Serial.print(B_Max3);
+  Serial.print("    ");
+  Serial.print("R_Min3: ");
+  Serial.print(R_Min3);
+  Serial.print(" ");
+  Serial.print("G_Min3: ");
+  Serial.print(G_Min3);
+  Serial.print(" ");
+  Serial.print("B_Min3: ");
+  Serial.println(B_Min3);
+
+  Serial.print("R_Max4: ");
+  Serial.print(R_Max4);
+  Serial.print(" ");
+  Serial.print("G_Max4: ");
+  Serial.print(G_Max4);
+  Serial.print(" ");
+  Serial.print("B_Max4: ");
+  Serial.print(B_Max4);
+  Serial.print("    ");
+  Serial.print("R_Min4: ");
+  Serial.print(R_Min4);
+  Serial.print(" ");
+  Serial.print("G_Min4: ");
+  Serial.print(G_Min4);
+  Serial.print(" ");
+  Serial.print("B_Min4: ");
+  Serial.println(B_Min4);
+
+  delay(5000);
+}
+
+
+
+
+
 // Class declaration before start
 driving driving;
 parking parking;
@@ -814,6 +1062,10 @@ void loop() {
   // put your main code here, to run repeatedly:
   switch_mode(); //Push the button to change the mode; 
 
+  if (Serial.read()=='c' || btdata=='c') {
+    calibrate();
+  }
+  
   if(driving_mode){
     driving.detect_crosswalk();
     driving.detect_objects_around();
