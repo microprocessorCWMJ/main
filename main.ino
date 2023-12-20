@@ -109,22 +109,22 @@ class parking{
       if(x==1){
         digitalWrite(S2,LOW);
         digitalWrite(S3,LOW);
-        Frequency = pulseIn(sensorOut1, LOW, 25000);
+        Frequency = pulseIn(sensorOut1, LOW, 30000);
       }
       else if(x==2){
         digitalWrite(S22,LOW);
         digitalWrite(S32,LOW);
-        Frequency = pulseIn(sensorOut2, LOW, 25000);
+        Frequency = pulseIn(sensorOut2, LOW, 30000);
       }
       else if(x==3){
         digitalWrite(S23,LOW);
         digitalWrite(S33,LOW);
-        Frequency = pulseIn(sensorOut3, LOW, 25000);
+        Frequency = pulseIn(sensorOut3, LOW, 30000);
       }
       else if(x==4){
         digitalWrite(S24,LOW);
         digitalWrite(S34,LOW);
-        Frequency = pulseIn(sensorOut4, LOW, 25000);
+        Frequency = pulseIn(sensorOut4, LOW, 30000);
       }
 
       return Frequency;
@@ -134,22 +134,22 @@ class parking{
       if(x==1){
         digitalWrite(S2,HIGH);
         digitalWrite(S3,HIGH);
-        Frequency = pulseIn(sensorOut1, LOW, 25000);
+        Frequency = pulseIn(sensorOut1, LOW, 30000);
       }
       else if(x==2){
         digitalWrite(S22,HIGH);
         digitalWrite(S32,HIGH);
-        Frequency = pulseIn(sensorOut2, LOW, 25000);
+        Frequency = pulseIn(sensorOut2, LOW, 30000);
       }
       else if(x==3){
         digitalWrite(S23,HIGH);
         digitalWrite(S33,HIGH);
-        Frequency = pulseIn(sensorOut3, LOW, 25000);
+        Frequency = pulseIn(sensorOut3, LOW, 30000);
       }
       else if(x==4){
         digitalWrite(S24,HIGH);
         digitalWrite(S34,HIGH);
-        Frequency = pulseIn(sensorOut4, LOW, 25000);
+        Frequency = pulseIn(sensorOut4, LOW, 30000);
       }
       return Frequency;
     }
@@ -158,22 +158,22 @@ class parking{
       if(x==1){
       digitalWrite(S2,LOW);
       digitalWrite(S3,HIGH);
-      Frequency = pulseIn(sensorOut1, LOW, 25000);
+      Frequency = pulseIn(sensorOut1, LOW, 30000);
       }
       else if(x==2){
       digitalWrite(S22,LOW);
       digitalWrite(S32,HIGH);
-      Frequency = pulseIn(sensorOut2, LOW, 25000);
+      Frequency = pulseIn(sensorOut2, LOW, 30000);
       }
       else if(x==3){
       digitalWrite(S23,LOW);
       digitalWrite(S33,HIGH);
-      Frequency = pulseIn(sensorOut3, LOW, 25000);
+      Frequency = pulseIn(sensorOut3, LOW, 30000);
       }
       else if(x==4){
         digitalWrite(S24,LOW);
         digitalWrite(S34,HIGH);
-        Frequency = pulseIn(sensorOut4, LOW, 25000);
+        Frequency = pulseIn(sensorOut4, LOW, 30000);
       }
       return Frequency;
     }
@@ -215,7 +215,7 @@ class parking{
       redValue2 = map(Red2, R_Min2,R_Max2,255,0);
       redValue3 = map(Red3, R_Min3,R_Max3,255,0);
       redValue4 = map(Red4, R_Min4,R_Max4,255,0);
-
+      delay(10);
       Green1 = getGreen(1);
       Green2 = getGreen(2);
       Green3 = getGreen(3);
@@ -228,7 +228,7 @@ class parking{
       greenValue2 = map(Green2, G_Min2,G_Max2,255,0);
       greenValue3 = map(Green3, G_Min3,G_Max3,255,0);
       greenValue4 = map(Green4, G_Min4,G_Max4,255,0);
-
+      delay(10);
       Blue1 = getBlue(1);
       Blue2 = getBlue(2);
       Blue3 = getBlue(3);
@@ -241,7 +241,7 @@ class parking{
       blueValue2 = map(Blue2, B_Min2,B_Max2,255,0); 
       blueValue3 = map(Blue3, B_Min3,B_Max3,255,0);
       blueValue4 = map(Blue4, B_Min4,B_Max4,255,0);
-    
+      delay(10);
       park();
       
       if(!park_flag){
@@ -446,7 +446,7 @@ class parking{
       bool black_flag=true;
       float current_time=0;
       Serial.println("Put black paper under TCS3200");
-      BT.println("Put black paper under TCS3200");
+      BT.print("Put black paper under TCS3200\n");
       delay(5000);
 
       current_time = millis();
@@ -512,7 +512,7 @@ class parking{
       }
 
       Serial.println("Put white paper under TCS3200");
-      BT.println("Put white paper under TCS3200");
+      BT.print("Put white paper under TCS3200\n");
 
       delay(5000);
 
@@ -674,15 +674,14 @@ class driving{
     uint32_t previous_time_for_object_detection_end = 0.0;
 
     /*Define int variables*/
-    uint16_t Red1, Red2, Red3, Red4;
-    uint16_t Green1, Green2, Green3, Green4;
-    uint16_t Blue1, Blue2, Blue3, Blue4;
-    uint16_t color_previous_time = 0, color_current_time = 0;
-
-    uint16_t redValue1, redValue2, redValue3, redValue4;
-    uint16_t greenValue1, greenValue2, greenValue3, greenValue4;
-    uint16_t blueValue1, blueValue2, blueValue3, blueValue4;
-    uint16_t Frequency;
+    int Red1, Red2, Red3, Red4;
+    int Green1, Green2, Green3, Green4;
+    int Blue1, Blue2, Blue3, Blue4;
+    int color_previous_time = 0, color_current_time = 0;
+    int redValue1, redValue2, redValue3, redValue4;
+    int greenValue1, greenValue2, greenValue3, greenValue4;
+    int blueValue1, blueValue2, blueValue3, blueValue4;
+    int Frequency;
 
     uint32_t white_time = 0.0, black_time = 0.0, white_start_time = 0.0, black_start_time = 0.0, crosswalk_time;
     uint8_t crosswalk_count = 0, crosswalk_warning_count=0, tmp_crosswalk_count;
@@ -720,8 +719,8 @@ class driving{
     void detect_dangerous_driving(){
       initSensor();
       getAngleXY();
-      Serial.print("pitch:");
-      Serial.println(angleAcY);
+      // Serial.print("pitch:");
+      // Serial.println(angleAcY);
       if((angleAcY >= 20 || angleAcY <= -20) && !tilt_start_flag){
         tilted_current_time = millis();
         tilt_start_flag = true;
@@ -730,7 +729,7 @@ class driving{
       if((millis()-tilted_current_time >= 3000) && (angleAcY >= 20 || angleAcY <= -20)){
         tilted_count += 1;
         Serial.println("tilt counted");
-        BT.println("tilt counted");
+        BT.print("tilt counted\n");
         if(tilted_count == 1){
           tilted_reference_time = millis();
         }
@@ -744,7 +743,7 @@ class driving{
           tilted_recklessness_count += 1;
 
           Serial.println("Dangerous and reckless driving detected. If caught more than three times, account ban will be imposed:");
-          BT.println("Dangerous and reckless driving detected. If caught more than three times, account ban will be imposed:");
+          BT.print("Dangerous and reckless driving detected. If caught more than three times, account ban will be imposed:\n");
           Serial.print("Dangerous count: ");
           BT.print("Dangerous count: ");
           Serial.print(tilted_warning_count);
@@ -752,7 +751,8 @@ class driving{
           Serial.print(", Recklessness count: ");
           BT.print(", Recklessness count: ");
           Serial.println(tilted_recklessness_count);
-          BT.println(tilted_recklessness_count);
+          BT.print(tilted_recklessness_count);
+          BT.print("\n");
           tilted_count = 0;
         }
         else{
@@ -766,7 +766,8 @@ class driving{
           BT.print("Dangerous count: ");
           BT.print(tilted_warning_count);
           BT.print(", Recklessness count: ");
-          BT.println(tilted_recklessness_count);
+          BT.print(tilted_recklessness_count);
+          BT.print("\n");
           tilted_count = 0;
         }
       }
@@ -774,13 +775,13 @@ class driving{
       if(tilted_warning_count >= 3){
         if(tilted_recklessness_count >= 1){
           Serial.println("Reckless driving detected: 3-day account banned");
-          BT.println("Reckless driving detected: 3-day account banned");
+          BT.print("Reckless driving detected: 3-day account banned\n");
           tilted_warning_count = 0;
           tilted_recklessness_count = 0;
         }
         else{
           Serial.println("Dangerous driving: 1-day account banned");
-          BT.println("Dangerous driving: 1-day account banned");
+          BT.print("Dangerous driving: 1-day account banned\n");
           tilted_warning_count = 0;
           tilted_recklessness_count = 0;
         }
@@ -804,14 +805,14 @@ class driving{
       double distance_LeftBehind = measureDistanceCm(LeftBehindpinTrig, LeftBehindpinEcho);
       double distance_RightFront = measureDistanceCm(RightFrontpinTrig, RightFrontpinEcho);
       double distance_RightBehind = measureDistanceCm(RightBehindpinTrig, RightBehindpinEcho);
-      Serial.print("dist_LF:");
-      Serial.print(distance_LeftFront);
-      Serial.print("dist_LB:");
-      Serial.print(distance_LeftBehind);
-      Serial.print("dist_RF:");
-      Serial.print(distance_RightFront);
-      Serial.print("dist_LF:");
-      Serial.print(distance_RightBehind);
+      // Serial.print("dist_LF:");
+      // Serial.print(distance_LeftFront);
+      // Serial.print(", dist_LB:");
+      // Serial.print(distance_LeftBehind);
+      // Serial.print(", dist_RF:");
+      // Serial.print(distance_RightFront);
+      // Serial.print(", dist_LF:");
+      // Serial.print(distance_RightBehind);
       //Ensuring that there is no distance error or The area that you are in is not open land.
       if(((distance_LeftFront < 1000) && (distance_LeftFront > 0)) && ((distance_LeftBehind < 1000 && distance_LeftBehind > 0)) && ((distance_RightFront < 1000 && distance_RightFront > 0)) && ((distance_RightBehind < 1000 && distance_RightBehind > 0))){
         
@@ -841,22 +842,22 @@ class driving{
       if(x==1){
         digitalWrite(S2,LOW);
         digitalWrite(S3,LOW);
-        Frequency = pulseIn(sensorOut1, LOW, 1000);
+        Frequency = pulseIn(sensorOut1, LOW, 30000);
       }
       else if(x==2){
         digitalWrite(S22,LOW);
         digitalWrite(S32,LOW);
-        Frequency = pulseIn(sensorOut2, LOW, 1000);
+        Frequency = pulseIn(sensorOut2, LOW, 30000);
       }
       else if(x==3){
         digitalWrite(S23,LOW);
         digitalWrite(S33,LOW);
-        Frequency = pulseIn(sensorOut3, LOW, 1000);
+        Frequency = pulseIn(sensorOut3, LOW, 30000);
       }
       else if(x==4){
         digitalWrite(S24,LOW);
         digitalWrite(S34,LOW);
-        Frequency = pulseIn(sensorOut4, LOW, 1000);
+        Frequency = pulseIn(sensorOut4, LOW, 30000);
       }
       return Frequency;
     }
@@ -865,22 +866,22 @@ class driving{
       if(x==1){
         digitalWrite(S2,HIGH);
         digitalWrite(S3,HIGH);
-        Frequency = pulseIn(sensorOut1, LOW, 1000);
+        Frequency = pulseIn(sensorOut1, LOW, 30000);
       }
       else if(x==2){
         digitalWrite(S22,HIGH);
         digitalWrite(S32,HIGH);
-        Frequency = pulseIn(sensorOut2, LOW, 1000);
+        Frequency = pulseIn(sensorOut2, LOW, 30000);
       }
       else if(x==3){
         digitalWrite(S23,HIGH);
         digitalWrite(S33,HIGH);
-        Frequency = pulseIn(sensorOut3, LOW, 1000);
+        Frequency = pulseIn(sensorOut3, LOW, 30000);
       }
       else if(x==4){
         digitalWrite(S24,HIGH);
         digitalWrite(S34,HIGH);
-        Frequency = pulseIn(sensorOut4, LOW, 1000);
+        Frequency = pulseIn(sensorOut4, LOW, 30000);
       }
       return Frequency;
     }
@@ -889,22 +890,22 @@ class driving{
       if(x==1){
       digitalWrite(S2,LOW);
       digitalWrite(S3,HIGH);
-      Frequency = pulseIn(sensorOut1, LOW, 1000);
+      Frequency = pulseIn(sensorOut1, LOW, 39000);
       }
       else if(x==2){
       digitalWrite(S22,LOW);
       digitalWrite(S32,HIGH);
-      Frequency = pulseIn(sensorOut2, LOW, 1000);
+      Frequency = pulseIn(sensorOut2, LOW, 30000);
       }
       else if(x==3){
       digitalWrite(S23,LOW);
       digitalWrite(S33,HIGH);
-      Frequency = pulseIn(sensorOut3, LOW, 1000);
+      Frequency = pulseIn(sensorOut3, LOW, 30000);
       }
       else if(x==4){
         digitalWrite(S24,LOW);
         digitalWrite(S34,HIGH);
-        Frequency = pulseIn(sensorOut4, LOW, 1000);
+        Frequency = pulseIn(sensorOut4, LOW, 30000);
       }
       return Frequency;
     }
@@ -921,7 +922,8 @@ class driving{
       redValue1 = map(Red1, R_Min1,R_Max1,255,0);
       redValue2 = map(Red2, R_Min2,R_Max2,255,0);
       redValue3 = map(Red3, R_Min3,R_Max3,255,0);
-      redValue4 = map(Red4, R_Min4,R_Max4,255,0); // all of the values need to be calibrated. This is temporay value. 
+      redValue4 = map(Red4, R_Min4,R_Max4,255,0); 
+      // all of the values need to be calibrated. This is temporay value. 
       //We should add calibrating code or We should set the min & max value by hand.
       delay(10);
       Green1 = getGreen(1);
@@ -956,21 +958,21 @@ class driving{
       totval2 = redValue2 + greenValue2 + blueValue2;
       totval3 = redValue3 + greenValue3 + blueValue3;
       totval4 = redValue4 + greenValue4 + blueValue4;
-      // Serial.print(redValue1);
-      // Serial.print("/");
-      // Serial.print(greenValue1);
-      // Serial.print("/");
-      // Serial.println(blueValue1);
-      // Serial.print(redValue2);
-      // Serial.print("/");
-      // Serial.print(greenValue2);
-      // Serial.print("/");
-      // Serial.println(blueValue2);
-      // Serial.print(redValue3);
-      // Serial.print("/");
-      // Serial.print(greenValue3);
-      // Serial.print("/");
-      // Serial.println(blueValue3);
+      Serial.print(redValue1);
+      Serial.print("/");
+      Serial.print(greenValue1);
+      Serial.print("/");
+      Serial.println(blueValue1);
+      Serial.print(redValue2);
+      Serial.print("/");
+      Serial.print(greenValue2);
+      Serial.print("/");
+      Serial.println(blueValue2);
+      Serial.print(redValue3);
+      Serial.print("/");
+      Serial.print(greenValue3);
+      Serial.print("/");
+      Serial.println(blueValue3);
       // Serial.print(redValue4);
       // Serial.print("/");
       // Serial.print(greenValue4);
@@ -978,14 +980,12 @@ class driving{
       // Serial.println(blueValue4);
       // Serial.println("///////////////////////////////////////");
       // delay(1000);
-      Serial.print("1:");
-      Serial.print(totval1);
-      Serial.print(", 2:");
-      Serial.print(totval2);
-      Serial.print(", 3:");
-      Serial.println(totval3);
-      // Serial.print(", 4:");
-      // Serial.println(totval4);
+      // Serial.print("1:");
+      // Serial.print(totval1);
+      // Serial.print(", 2:");
+      // Serial.print(totval2);
+      // Serial.print(", 3:");
+      // Serial.print(totval3);
       
       if(!white_flag && ((totval1 >= 720) || (totval2 >= 720))){
         white_flag = true;
@@ -1014,7 +1014,8 @@ class driving{
         Serial.print("Detection of rapid motion within crosswalks or excessive lane changes. If caught more than three times, account ban will be imposed:");
         Serial.println(crosswalk_warning_count);
         BT.print("Detection of rapid motion within crosswalks or excessive lane changes. If caught more than three times, account ban will be imposed:");
-        BT.println(crosswalk_warning_count);
+        BT.print(crosswalk_warning_count);
+        BT.print("\n");
         white_time=0;
       }
 
@@ -1023,7 +1024,8 @@ class driving{
         Serial.print("Detection of rapid motion within crosswalks or excessive lane changes. If caught more than three times, account ban will be imposed:");
         Serial.println(crosswalk_warning_count);
         BT.print("Detection of rapid motion within crosswalks or excessive lane changes. If caught more than three times, account ban will be imposed:");
-        BT.println(crosswalk_warning_count);
+        BT.print(crosswalk_warning_count);
+        BT.print("\n");
         black_time=0;
       }
       
@@ -1037,8 +1039,7 @@ class driving{
 
         if(crosswalk_warning_count>=3){
           Serial.println("Reckless driving detected: 3-day account banned");
-          BT.println("Reckless driving detected: 3-day account banned");
-          crosswalk_warning_count = 0;
+          BT.print("Reckless driving detected: 3-day account banned\n");
         }
 
         if(crosswalk_count - tmp_crosswalk_count > 0){
@@ -1058,13 +1059,13 @@ class driving{
 void switch_mode(){
   if(driving_mode==false && btdata == '2'){
     Serial.println("Now Driving");
-    BT.println("Now Driving");
+    BT.print("Now Driving\n");
     driving_mode = true;
   }
   
   else if(driving_mode==true && btdata == '3'){
     Serial.println("Now Parking");
-    BT.println("Now Parking");
+    BT.print("Now Parking\n");
     driving_mode = false;
   }
 }
@@ -1170,28 +1171,29 @@ void setup() {
   Serial.begin(115200);    
   if(driving_mode){
     Serial.println("Initialized to driving mode");
-    BT.println("Initialized to driving mode");
+    BT.print("Initialized to driving mode\n");
   }
   else{
     Serial.println("Initialized to parking mode");
-    BT.println("Initialized to parking mode");
+    BT.print("Initialized to parking mode\n");
 
   }
 }
 
 void loop() {
-  btdata=BT.read();
+  if(BT.available()){
+      btdata=BT.read();
+      }
+  
+  // put your main code here, to run repeatedly:
+  switch_mode(); //Push the button to change the mode; 
   if (Serial.read()=='c' || btdata=='c') {
     parking.calibrate();
   }
-  // put your main code here, to run repeatedly:
-  switch_mode(); //Push the button to change the mode; 
-
   if(driving_mode){
     driving.detect_crosswalk();
     driving.detect_objects_around();
     driving.detect_dangerous_driving();
-    delay(500);
   }
 
   if(!driving_mode){
@@ -1202,7 +1204,7 @@ void loop() {
     if(untilted_parking && parallel_with_beside_kickboard && on_the_parking_line){
       if(btdata == '1'){
         Serial.println("parking complete");
-        BT.println("parking complete");
+        BT.print("parking complete\n");
         parking_complete = true;
         delay(30000);
       }
@@ -1212,17 +1214,17 @@ void loop() {
       if(btdata == '1'){
         if(!on_the_parking_line){
           Serial.println("Please check the parking line.");
-          BT.println("Please check the parking line.");
+          BT.print("Please check the parking line.\n");
           delay(1000);
         }
         else if(!parallel_with_beside_kickboard){
           Serial.println("Please park parallel to the side kickboard.");
-          BT.println("Please park parallel to the side kickboard.");
+          BT.print("Please park parallel to the side kickboard.\n");
           delay(1000);
         }
         else if(!untilted_parking){
           Serial.println("Please park the kickboard parallel to the ground.");
-          BT.println("Please park the kickboard parallel to the ground.");
+          BT.print("Please park the kickboard parallel to the ground.\n");
           delay(1000);
         }
         parking_complete = false;
