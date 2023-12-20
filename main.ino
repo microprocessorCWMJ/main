@@ -446,6 +446,7 @@ class parking{
       bool black_flag=true;
       float current_time=0;
       Serial.println("Put black paper under TCS3200");
+      BT.print("Put black paper under TCS3200"\n);
       delay(5000);
 
       current_time = millis();
@@ -511,6 +512,7 @@ class parking{
       }
 
       Serial.println("Put white paper under TCS3200");
+      BT.print("Put white paper under TCS3200"\n);
 
       delay(5000);
 
@@ -726,6 +728,7 @@ class driving{
       if((millis()-tilted_current_time >= 3000) && (angleAcY >= 30 || angleAcY <= -30)){
         tilted_count += 1;
         Serial.println("tilt counted");
+        BT.print("tilt counted"\n);
         if(tilted_count == 1){
           tilted_reference_time = millis();
         }
@@ -739,10 +742,15 @@ class driving{
           tilted_recklessness_count += 1;
 
           Serial.println("Dangerous and reckless driving detected. If caught more than three times, account ban will be imposed:");
+          BT.print("Dangerous and reckless driving detected. If caught more than three times, account ban will be imposed:"\n);
           Serial.print("Dangerous count: ");
+          BT.print("Dangerous count: ");
           Serial.print(tilted_warning_count);
+          BT.print(tilted_warning_count);
           Serial.print(", Recklessness count: ");
+          BT.print(", Recklessness count: ");
           Serial.println(tilted_recklessness_count);
+          BT.print(tilted_recklessness_count\n);
           tilted_count = 0;
         }
         else{
@@ -752,6 +760,11 @@ class driving{
           Serial.print(tilted_warning_count);
           Serial.print(", Recklessness count: ");
           Serial.println(tilted_recklessness_count);
+          BT.print("Dangerous driving detected. If caught more than three times, account ban will be imposed:");
+          BT.print("Dangerous count: ");
+          BT.print(tilted_warning_count);
+          BT.print(", Recklessness count: ");
+          BT.print(tilted_recklessness_count\n);
           tilted_count = 0;
         }
       }
@@ -759,11 +772,13 @@ class driving{
       if(tilted_warning_count >= 3){
         if(tilted_recklessness_count >= 1){
           Serial.println("Reckless driving detected: 3-day account banned");
+          BT.print("Reckless driving detected: 3-day account banned"\n);
           tilted_warning_count = 0;
           tilted_recklessness_count = 0;
         }
         else{
           Serial.println("Dangerous driving: 1-day account banned");
+          BT.print("Dangerous driving: 1-day account banned"\n);
           tilted_warning_count = 0;
           tilted_recklessness_count = 0;
         }
@@ -894,8 +909,8 @@ class driving{
       Red4 = constrain(Red4, R_Min4, R_Max4);
       redValue1 = map(Red1, R_Min1,R_Max1,255,0);
       redValue2 = map(Red2, R_Min2,R_Max2,255,0);
-      redValue3 = map(Red3, R_Min1,R_Max1,255,0);
-      redValue4 = map(Red4, R_Min2,R_Max2,255,0); // all of the values need to be calibrated. This is temporay value. 
+      redValue3 = map(Red3, R_Min3,R_Max3,255,0);
+      redValue4 = map(Red4, R_Min4,R_Max4,255,0); // all of the values need to be calibrated. This is temporay value. 
       //We should add calibrating code or We should set the min & max value by hand.
       delay(10);
       Green1 = getGreen(1);
@@ -908,21 +923,21 @@ class driving{
       Green4 = constrain(Green4, G_Min4, G_Max4);
       greenValue1 = map(Green1, G_Min1,G_Max1,255,0);
       greenValue2 = map(Green2, G_Min2,G_Max2,255,0);
-      greenValue3 = map(Green3, G_Min1,G_Max1,255,0);
-      greenValue4 = map(Green4, G_Min2,G_Max2,255,0);
+      greenValue3 = map(Green3, G_Min3,G_Max3,255,0);
+      greenValue4 = map(Green4, G_Min4,G_Max4,255,0);
       delay(10);
       Blue1 = getBlue(1);
       Blue2 = getBlue(2);
-      Blue1 = getBlue(3);
-      Blue2 = getBlue(4);
+      Blue3 = getBlue(3);
+      Blue4 = getBlue(4);
       Blue1 = constrain(Blue1, B_Min1, B_Max1);
       Blue2 = constrain(Blue2, B_Min2, B_Max2);
       Blue3 = constrain(Blue3, B_Min3, B_Max3);
       Blue4 = constrain(Blue4, B_Min4, B_Max4);
       blueValue1 = map(Blue1, B_Min1,B_Max1,255,0); 
       blueValue2 = map(Blue2, B_Min2,B_Max2,255,0); 
-      blueValue3 = map(Blue3, B_Min1,B_Max1,255,0); 
-      blueValue4 = map(Blue4, B_Min2,B_Max2,255,0); 
+      blueValue3 = map(Blue3, B_Min3,B_Max3,255,0); 
+      blueValue4 = map(Blue4, B_Min4,B_Max4,255,0); 
       delay(10);  
 
       //two color sensors are used located in the kickboard's head side
@@ -987,6 +1002,8 @@ class driving{
         crosswalk_warning_count += 1;
         Serial.print("Detection of rapid motion within crosswalks or excessive lane changes. If caught more than three times, account ban will be imposed:");
         Serial.println(crosswalk_warning_count);
+        BT.print("Detection of rapid motion within crosswalks or excessive lane changes. If caught more than three times, account ban will be imposed:");
+        BT.print(crosswalk_warning_count\n);
         white_time=0;
       }
 
@@ -994,6 +1011,8 @@ class driving{
         crosswalk_warning_count += 1;
         Serial.print("Detection of rapid motion within crosswalks or excessive lane changes. If caught more than three times, account ban will be imposed:");
         Serial.println(crosswalk_warning_count);
+        BT.print("Detection of rapid motion within crosswalks or excessive lane changes. If caught more than three times, account ban will be imposed:");
+        BT.print(crosswalk_warning_count\n);
         black_time=0;
       }
       
@@ -1007,6 +1026,7 @@ class driving{
 
         if(crosswalk_warning_count>=3){
           Serial.println("Reckless driving detected: 3-day account banned");
+          BT.print("Reckless driving detected: 3-day account banned"\n);
         }
 
         if(crosswalk_count - tmp_crosswalk_count > 0){
@@ -1026,11 +1046,13 @@ class driving{
 void switch_mode(){
   if(driving_mode==false && btdata == '2'){
     Serial.println("Now Driving");
+    BT.print("Now Driving"\n);
     driving_mode = true;
   }
   
   else if(driving_mode==true && btdata == '3'){
     Serial.println("Now Parking");
+    BT.print("Now Parking"\n);
     driving_mode = false;
   }
 }
@@ -1136,9 +1158,11 @@ void setup() {
   Serial.begin(115200);    
   if(driving_mode){
     Serial.println("Initialized to driving mode");
+    BT.print("Initialized to driving mode"\n);
   }
   else{
     Serial.println("Initialized to parking mode");
+    BT.print("Initialized to parking mode"\n);
 
   }
 }
@@ -1163,6 +1187,7 @@ void loop() {
     if(untilted_parking && parallel_with_beside_kickboard && on_the_parking_line){
       if(btdata == '1'){
         Serial.println("parking complete");
+        BT.print("parking complete"\n);
         parking_complete = true;
         delay(30000);
       }
@@ -1172,14 +1197,17 @@ void loop() {
       if(btdata == '1'){
         if(!on_the_parking_line){
           Serial.println("Please check the parking line.");
+          BT.print("Please check the parking line."\n);
           delay(1000);
         }
         else if(!parallel_with_beside_kickboard){
           Serial.println("Please park parallel to the side kickboard.");
+          BT.print("Please park parallel to the side kickboard."\n);
           delay(1000);
         }
         else if(!untilted_parking){
           Serial.println("Please park the kickboard parallel to the ground.");
+          BT.print("Please park the kickboard parallel to the ground."\n);
           delay(1000);
         }
         parking_complete = false;
