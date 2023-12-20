@@ -109,22 +109,22 @@ class parking{
       if(x==1){
         digitalWrite(S2,LOW);
         digitalWrite(S3,LOW);
-        Frequency = pulseIn(sensorOut1, LOW, 1000);
+        Frequency = pulseIn(sensorOut1, LOW, 25000);
       }
       else if(x==2){
         digitalWrite(S22,LOW);
         digitalWrite(S32,LOW);
-        Frequency = pulseIn(sensorOut2, LOW, 1000);
+        Frequency = pulseIn(sensorOut2, LOW, 25000);
       }
       else if(x==3){
         digitalWrite(S23,LOW);
         digitalWrite(S33,LOW);
-        Frequency = pulseIn(sensorOut3, LOW, 1000);
+        Frequency = pulseIn(sensorOut3, LOW, 25000);
       }
       else if(x==4){
         digitalWrite(S24,LOW);
         digitalWrite(S34,LOW);
-        Frequency = pulseIn(sensorOut4, LOW, 1000);
+        Frequency = pulseIn(sensorOut4, LOW, 25000);
       }
 
       return Frequency;
@@ -134,22 +134,22 @@ class parking{
       if(x==1){
         digitalWrite(S2,HIGH);
         digitalWrite(S3,HIGH);
-        Frequency = pulseIn(sensorOut1, LOW, 1000);
+        Frequency = pulseIn(sensorOut1, LOW, 25000);
       }
       else if(x==2){
         digitalWrite(S22,HIGH);
         digitalWrite(S32,HIGH);
-        Frequency = pulseIn(sensorOut2, LOW, 1000);
+        Frequency = pulseIn(sensorOut2, LOW, 25000);
       }
       else if(x==3){
         digitalWrite(S23,HIGH);
         digitalWrite(S33,HIGH);
-        Frequency = pulseIn(sensorOut3, LOW, 1000);
+        Frequency = pulseIn(sensorOut3, LOW, 25000);
       }
       else if(x==4){
         digitalWrite(S24,HIGH);
         digitalWrite(S34,HIGH);
-        Frequency = pulseIn(sensorOut4, LOW, 1000);
+        Frequency = pulseIn(sensorOut4, LOW, 25000);
       }
       return Frequency;
     }
@@ -158,22 +158,22 @@ class parking{
       if(x==1){
       digitalWrite(S2,LOW);
       digitalWrite(S3,HIGH);
-      Frequency = pulseIn(sensorOut1, LOW, 1000);
+      Frequency = pulseIn(sensorOut1, LOW, 25000);
       }
       else if(x==2){
       digitalWrite(S22,LOW);
       digitalWrite(S32,HIGH);
-      Frequency = pulseIn(sensorOut2, LOW, 1000);
+      Frequency = pulseIn(sensorOut2, LOW, 25000);
       }
       else if(x==3){
       digitalWrite(S23,LOW);
       digitalWrite(S33,HIGH);
-      Frequency = pulseIn(sensorOut3, LOW, 1000);
+      Frequency = pulseIn(sensorOut3, LOW, 25000);
       }
       else if(x==4){
         digitalWrite(S24,LOW);
         digitalWrite(S34,HIGH);
-        Frequency = pulseIn(sensorOut4, LOW, 1000);
+        Frequency = pulseIn(sensorOut4, LOW, 25000);
       }
       return Frequency;
     }
