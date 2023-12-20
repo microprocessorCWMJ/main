@@ -24,11 +24,7 @@
 #define RightBehindpinEcho 36
 
 #define BT Serial3 //Txd to pin 15 Rxd to pin 14
-
-#include <LiquidCrystal_I2C.h>
 #include <Wire.h>
-
-LiquidCrystal_I2C lcd(0x27, 16, 2);
 
 const int MPU_ADDR = 0x68;  // Address of MPU6050(imu sensor) for I2C communication
 const double RADIAN_TO_DEGREE = 180 / 3.14159;
@@ -72,7 +68,7 @@ int R_Max2 = 101;
 int G_Min2 = 21; 
 int G_Max2 = 106;
 int B_Min2 = 17; 
-int B_Max2 = 81;
+int B_Max2 = 135;
 
 //TALE
 int R_Min3 = 7; 
@@ -98,6 +94,7 @@ int blueValue1, blueValue2, blueValue3, blueValue4;
 int Frequency;
 //----------------------------------------------------------------------------------------------------------------------//
 
+void fre();
 
 class parking{
   private:
@@ -107,6 +104,7 @@ class parking{
     bool park_flag;
   
   public:
+    
     int getRed(int x) {
       if(x==1){
         digitalWrite(S2,LOW);
@@ -209,6 +207,10 @@ class parking{
       Red4 = getRed(4);
       // all of the values need to be calibrated. This is temporay value.
       // We should add calibrating code or We should set the min & max value by hand. 
+      Red1 = constrain(Red1, R_Min1, R_Max1);
+      Red2 = constrain(Red2, R_Min2, R_Max2);
+      Red3 = constrain(Red3, R_Min3, R_Max3);
+      Red4 = constrain(Red4, R_Min4, R_Max4);
       redValue1 = map(Red1, R_Min1,R_Max1,255,0); 
       redValue2 = map(Red2, R_Min2,R_Max2,255,0);
       redValue3 = map(Red3, R_Min3,R_Max3,255,0);
@@ -218,6 +220,10 @@ class parking{
       Green2 = getGreen(2);
       Green3 = getGreen(3);
       Green4 = getGreen(4);
+      Green1 = constrain(Green1, G_Min1, G_Max1);
+      Green2 = constrain(Green2, G_Min2, G_Max2);
+      Green3 = constrain(Green3, G_Min3, G_Max3);
+      Green4 = constrain(Green4, G_Min4, G_Max4);
       greenValue1 = map(Green1, G_Min1,G_Max1,255,0);
       greenValue2 = map(Green2, G_Min2,G_Max2,255,0);
       greenValue3 = map(Green3, G_Min3,G_Max3,255,0);
@@ -227,6 +233,10 @@ class parking{
       Blue2 = getBlue(2);
       Blue3 = getBlue(3);
       Blue4 = getBlue(4);
+      Blue1 = constrain(Blue1, B_Min1, B_Max1);
+      Blue2 = constrain(Blue2, B_Min2, B_Max2);
+      Blue3 = constrain(Blue3, B_Min3, B_Max3);
+      Blue4 = constrain(Blue4, B_Min4, B_Max4);
       blueValue1 = map(Blue1, B_Min1,B_Max1,255,0);
       blueValue2 = map(Blue2, B_Min2,B_Max2,255,0); 
       blueValue3 = map(Blue3, B_Min3,B_Max3,255,0);
@@ -431,70 +441,6 @@ class parking{
         }
       }
     }
-    void fre(){
-      parking parking;
-      parking.detect_parking_line();
-
-    //1111111111111111111111111
-      Serial.print("1 = ");
-      Serial.print("R_f: ");
-      Serial.print(Red1);
-      Serial.print(" ");
-      Serial.print("G_f: ");
-      Serial.print(Green1);
-      Serial.print(" ");
-      Serial.print("B_f: ");
-      Serial.print(Blue1);
-      Serial.println(" ");
-
-      delay(100);
-
-
-    //22222222222222222222222222
-      Serial.print("2 = ");
-      Serial.print("    ");
-      Serial.print("R_f: ");
-      Serial.print(Red2);
-      Serial.print(" ");
-      Serial.print("G_f: ");
-      Serial.print(Green2);
-      Serial.print(" ");
-      Serial.print("B_f: ");
-      Serial.print(Blue2);
-      Serial.println(" ");
-
-
-      delay(100);
-
-
-    //333333333333333333333333333
-      Serial.print("3 = ");
-      Serial.print("R_f: ");
-      Serial.print(Red3);
-      Serial.print(" ");
-      Serial.print("G_f: ");
-      Serial.print(Green3);
-      Serial.print(" ");
-      Serial.print("B_f: ");
-      Serial.print(Blue3);
-      Serial.println(" ");
-
-      delay(100);
-
-    //4444444444444444444444444444
-      Serial.print("4 = ");
-      Serial.print("R_f: ");
-      Serial.print(Red4);
-      Serial.print(" ");
-      Serial.print("G_f: ");
-      Serial.print(Green4);
-      Serial.print(" ");
-      Serial.print("B_f: ");
-      Serial.print(Blue4);
-      Serial.println(" ");
-
-      delay(100);
-    }
 
     void calibrate(){
       bool black_flag=true;
@@ -505,45 +451,60 @@ class parking{
       current_time = millis();
 
       if(black_flag==true){
-        while((millis()-current_time)<=10000){
+        while((millis()-current_time)<=20000){
           fre();
-          if(getRed(1)>R_Max1){
-            R_Max1=getRed(1);
+          int R_tmp1=getRed(1);
+          int R_tmp2=getRed(2);
+          int R_tmp3=getRed(3);
+          int R_tmp4=getRed(4);
+
+          int G_tmp1=getGreen(1);
+          int G_tmp2=getGreen(2);
+          int G_tmp3=getGreen(3);
+          int G_tmp4=getGreen(4);
+
+          int B_tmp1=getBlue(1);
+          int B_tmp2=getBlue(2);
+          int B_tmp3=getBlue(3);
+          int B_tmp4=getBlue(4);
+
+          if(R_tmp1>R_Max1){
+            R_Max1=R_tmp1;
           }
-          if(getRed(2)>R_Max2){
-            R_Max2=getRed(2);
+          if(R_tmp2>R_Max2){
+            R_Max2=R_tmp2;
           }
-          if(getRed(3)>R_Max3){
-            R_Max3=getRed(3);
+          if(R_tmp3>R_Max3){
+            R_Max3=R_tmp3;
           }
-          if(getRed(4)>R_Max4){
-            R_Max4=getRed(4);
+          if(R_tmp4>R_Max4){
+            R_Max4=R_tmp4;
           }
 
-          if(getGreen(1)>G_Max1){
-            G_Max1=getGreen(1);
+          if(G_tmp1>G_Max1){
+            G_Max1=G_tmp1;
           }
-          if(getGreen(2)>G_Max2){
-            G_Max2=getGreen(2);
+          if(G_tmp2>G_Max2){
+            G_Max2=G_tmp2;
           }
-          if(getGreen(3)>G_Max3){
-            G_Max3=getGreen(3);
+          if(G_tmp3>G_Max3){
+            G_Max3=G_tmp3;
           }
-          if(getGreen(4)>G_Max4){
-            G_Max4=getGreen(4);
+          if(G_tmp4>G_Max4){
+            G_Max4=G_tmp4;
           }
 
-          if(getBlue(1)>B_Max1){
-            B_Max1=getBlue(1);
+          if(B_tmp1>B_Max1){
+            B_Max1=B_tmp1;
           }
-          if(getBlue(2)>B_Max2){
-            B_Max2=getBlue(2);
+          if(B_tmp2>B_Max2){
+            B_Max2=B_tmp2;
           }
-          if(getBlue(3)>B_Max3){
-            B_Max3=getBlue(3);
+          if(B_tmp3>B_Max3){
+            B_Max3=B_tmp3;
           }
-          if(getBlue(4)>B_Max4){
-            B_Max4=getBlue(4);
+          if(B_tmp4>B_Max4){
+            B_Max4=B_tmp4;
           }
         }
         black_flag=false;
@@ -555,45 +516,60 @@ class parking{
 
       current_time = millis();
       if(black_flag==false){
-        while((millis()-current_time)<=10000){
+        while((millis()-current_time)<=20000){
           fre();
-          if(getRed(1)<R_Min1){
-            R_Min1=getRed(1);
+          uint16_t R_tmp1=getRed(1);
+          uint16_t R_tmp2=getRed(2);
+          uint16_t R_tmp3=getRed(3);
+          uint16_t R_tmp4=getRed(4);
+
+          uint16_t G_tmp1=getGreen(1);
+          uint16_t G_tmp2=getGreen(2);
+          uint16_t G_tmp3=getGreen(3);
+          uint16_t G_tmp4=getGreen(4);
+          
+          uint16_t B_tmp1=getBlue(1);
+          uint16_t B_tmp2=getBlue(2);
+          uint16_t B_tmp3=getBlue(3);
+          uint16_t B_tmp4=getBlue(4);
+
+          if(R_tmp1<R_Min1){
+            R_Min1=R_tmp1;
           }
-          if(getRed(2)<R_Min2){
-            R_Min2=getRed(2);
+          if(R_tmp2<R_Min2){
+            R_Min2=R_tmp2;
           }
-          if(getRed(3)<R_Min3){
-            R_Min3=getRed(3);
+          if(R_tmp3<R_Min3){
+            R_Min3=R_tmp3;
           }
-          if(getRed(4)<R_Min4){
-            R_Min4=getRed(4);
+          if(R_tmp4<R_Min4){
+            R_Min4=R_tmp4;
           }
 
-          if(getGreen(1)<G_Min1){
-            G_Min1=getGreen(1);
+          if(G_tmp1<G_Min1){
+            G_Min1=G_tmp1;
           }
-          if(getGreen(2)<G_Min2){
-            G_Min2=getGreen(2);
+          if(G_tmp2<G_Min2){
+            G_Min2=G_tmp2;
           }
-          if(getGreen(3)<G_Min3){
-            G_Min3=getGreen(3);
+          if(G_tmp3<G_Min3){
+            G_Min3=G_tmp3;
           }
-          if(getGreen(4)<G_Min4){
-            G_Min4=getGreen(4);
+          if(G_tmp4<G_Min4){
+            G_Min4=G_tmp4;
           }
 
-          if(getBlue(1)<B_Min1){
-            B_Min1=getBlue(1);
+          if(B_tmp1<B_Min1){
+            B_Min1=B_tmp1;
           }
-          if(getBlue(2)<B_Min2){
-            B_Min2=getBlue(2);
+          if(B_tmp2<B_Min2){
+            B_Min2=B_tmp2;
           }
-          if(getBlue(3)<B_Min3){
-            B_Min3=getBlue(3);
+          if(B_tmp3<B_Min3){
+            B_Min3=B_tmp3;
           }
-          if(getBlue(4)<B_Min4){
-            B_Min4=getBlue(4);
+          if(B_tmp4<B_Min4){
+            B_Min4=B_tmp4;
           }
         }
         black_flag=true;
@@ -673,7 +649,6 @@ class parking{
 
       delay(5000);
     }
-  
 };
 
 class driving{
@@ -697,19 +672,19 @@ class driving{
     uint32_t previous_time_for_object_detection_end = 0.0;
 
     /*Define int variables*/
-    int Red1, Red2, Red3, Red4;
-    int Green1, Green2, Green3, Green4;
-    int Blue1, Blue2, Blue3, Blue4;
-    int color_previous_time = 0, color_current_time = 0;
+    uint16_t Red1, Red2, Red3, Red4;
+    uint16_t Green1, Green2, Green3, Green4;
+    uint16_t Blue1, Blue2, Blue3, Blue4;
+    uint16_t color_previous_time = 0, color_current_time = 0;
 
-    int redValue1, redValue2, redValue3, redValue4;
-    int greenValue1, greenValue2, greenValue3, greenValue4;
-    int blueValue1, blueValue2, blueValue3, blueValue4;
-    int Frequency;
+    uint16_t redValue1, redValue2, redValue3, redValue4;
+    uint16_t greenValue1, greenValue2, greenValue3, greenValue4;
+    uint16_t blueValue1, blueValue2, blueValue3, blueValue4;
+    uint16_t Frequency;
 
     uint32_t white_time = 0.0, black_time = 0.0, white_start_time = 0.0, black_start_time = 0.0, crosswalk_time;
     uint8_t crosswalk_count = 0, crosswalk_warning_count=0, tmp_crosswalk_count;
-    uint16_t totval1, totval2;
+    uint16_t totval1, totval2, totval3, totval4;
 
     bool white_flag = false;
   
@@ -911,24 +886,80 @@ class driving{
     void detect_crosswalk(){
       Red1 = getRed(1);
       Red2 = getRed(2);
+      Red3 = getRed(3);
+      Red4 = getRed(4);
+      Red1 = constrain(Red1, R_Min1, R_Max1);
+      Red2 = constrain(Red2, R_Min2, R_Max2);
+      Red3 = constrain(Red3, R_Min3, R_Max3);
+      Red4 = constrain(Red4, R_Min4, R_Max4);
       redValue1 = map(Red1, R_Min1,R_Max1,255,0);
-      redValue2 = map(Red2, R_Min2,R_Max2,255,0); // all of the values need to be calibrated. This is temporay value. 
+      redValue2 = map(Red2, R_Min2,R_Max2,255,0);
+      redValue3 = map(Red3, R_Min1,R_Max1,255,0);
+      redValue4 = map(Red4, R_Min2,R_Max2,255,0); // all of the values need to be calibrated. This is temporay value. 
       //We should add calibrating code or We should set the min & max value by hand.
       delay(10);
       Green1 = getGreen(1);
       Green2 = getGreen(2);
+      Green3 = getGreen(3);
+      Green4 = getGreen(4);
+      Green1 = constrain(Green1, G_Min1, G_Max1);
+      Green2 = constrain(Green2, G_Min2, G_Max2);
+      Green3 = constrain(Green3, G_Min3, G_Max3);
+      Green4 = constrain(Green4, G_Min4, G_Max4);
       greenValue1 = map(Green1, G_Min1,G_Max1,255,0);
       greenValue2 = map(Green2, G_Min2,G_Max2,255,0);
+      greenValue3 = map(Green3, G_Min1,G_Max1,255,0);
+      greenValue4 = map(Green4, G_Min2,G_Max2,255,0);
       delay(10);
       Blue1 = getBlue(1);
       Blue2 = getBlue(2);
+      Blue1 = getBlue(3);
+      Blue2 = getBlue(4);
+      Blue1 = constrain(Blue1, B_Min1, B_Max1);
+      Blue2 = constrain(Blue2, B_Min2, B_Max2);
+      Blue3 = constrain(Blue3, B_Min3, B_Max3);
+      Blue4 = constrain(Blue4, B_Min4, B_Max4);
       blueValue1 = map(Blue1, B_Min1,B_Max1,255,0); 
       blueValue2 = map(Blue2, B_Min2,B_Max2,255,0); 
+      blueValue3 = map(Blue3, B_Min1,B_Max1,255,0); 
+      blueValue4 = map(Blue4, B_Min2,B_Max2,255,0); 
       delay(10);  
 
       //two color sensors are used located in the kickboard's head side
       totval1 = redValue1 + greenValue1 + blueValue1;
       totval2 = redValue2 + greenValue2 + blueValue2;
+      totval3 = redValue3 + greenValue3 + blueValue3;
+      totval4 = redValue4 + greenValue4 + blueValue4;
+      // Serial.print(redValue1);
+      // Serial.print("/");
+      // Serial.print(greenValue1);
+      // Serial.print("/");
+      // Serial.println(blueValue1);
+      // Serial.print(redValue2);
+      // Serial.print("/");
+      // Serial.print(greenValue2);
+      // Serial.print("/");
+      // Serial.println(blueValue2);
+      // Serial.print(redValue3);
+      // Serial.print("/");
+      // Serial.print(greenValue3);
+      // Serial.print("/");
+      // Serial.println(blueValue3);
+      // Serial.print(redValue4);
+      // Serial.print("/");
+      // Serial.print(greenValue4);
+      // Serial.print("/");
+      // Serial.println(blueValue4);
+      // Serial.println("///////////////////////////////////////");
+      // delay(1000);
+      Serial.print("1:");
+      Serial.print(totval1);
+      Serial.print(", 2:");
+      Serial.print(totval2);
+      Serial.print(", 3:");
+      Serial.print(totval3);
+      Serial.print(", 4:");
+      Serial.println(totval4);
       
       if(!white_flag && ((totval1 >= 720) || (totval2 >= 720))){
         white_flag = true;
@@ -956,12 +987,14 @@ class driving{
         crosswalk_warning_count += 1;
         Serial.print("Detection of rapid motion within crosswalks or excessive lane changes. If caught more than three times, account ban will be imposed:");
         Serial.println(crosswalk_warning_count);
+        white_time=0;
       }
 
       if(((black_time>0) && (black_time<508)) && (millis() > 30000)){
         crosswalk_warning_count += 1;
         Serial.print("Detection of rapid motion within crosswalks or excessive lane changes. If caught more than three times, account ban will be imposed:");
         Serial.println(crosswalk_warning_count);
+        black_time=0;
       }
       
       if(crosswalk_count>=3){
@@ -1002,8 +1035,70 @@ void switch_mode(){
   }
 }
 
+void fre(){
+    parking parking;
+    parking.detect_parking_line();
+
+  //1111111111111111111111111
+    Serial.print("1 = ");
+    Serial.print("R_f: ");
+    Serial.print(Red1);
+    Serial.print(" ");
+    Serial.print("G_f: ");
+    Serial.print(Green1);
+    Serial.print(" ");
+    Serial.print("B_f: ");
+    Serial.print(Blue1);
+    Serial.println(" ");
+
+    delay(100);
 
 
+  //22222222222222222222222222
+    Serial.print("2 = ");
+    Serial.print("    ");
+    Serial.print("R_f: ");
+    Serial.print(Red2);
+    Serial.print(" ");
+    Serial.print("G_f: ");
+    Serial.print(Green2);
+    Serial.print(" ");
+    Serial.print("B_f: ");
+    Serial.print(Blue2);
+    Serial.println(" ");
+
+
+    delay(100);
+
+
+  //333333333333333333333333333
+    Serial.print("3 = ");
+    Serial.print("R_f: ");
+    Serial.print(Red3);
+    Serial.print(" ");
+    Serial.print("G_f: ");
+    Serial.print(Green3);
+    Serial.print(" ");
+    Serial.print("B_f: ");
+    Serial.print(Blue3);
+    Serial.println(" ");
+
+    delay(100);
+
+  //4444444444444444444444444444
+    Serial.print("4 = ");
+    Serial.print("R_f: ");
+    Serial.print(Red4);
+    Serial.print(" ");
+    Serial.print("G_f: ");
+    Serial.print(Green4);
+    Serial.print(" ");
+    Serial.print("B_f: ");
+    Serial.print(Blue4);
+    Serial.println(" ");
+
+    delay(100);
+  }
 
 
 // Class declaration before start
@@ -1012,8 +1107,6 @@ parking parking;
 
 void setup() {
   // put your setup code here, to run once:
-  lcd.init();
-  lcd.backlight();
   
   pinMode(parking_switch,INPUT_PULLUP);
 
@@ -1040,18 +1133,13 @@ void setup() {
   pinMode(sensorOut4, INPUT);  
 
   BT.begin(115200);
-  Serial.begin(115200);      
-  delay(1000);
-
+  Serial.begin(115200);    
   if(driving_mode){
     Serial.println("Initialized to driving mode");
-    lcd.clear();
-    lcd.print("Initialized to driving mode");
   }
   else{
     Serial.println("Initialized to parking mode");
-    lcd.clear();
-    lcd.print("Initialized to driving mode");
+
   }
 }
 
@@ -1061,10 +1149,6 @@ void loop() {
   // put your main code here, to run repeatedly:
   switch_mode(); //Push the button to change the mode; 
 
-  if (Serial.read()=='c' || btdata=='c') {
-    parking.calibrate();
-  }
-  
   if(driving_mode){
     driving.detect_crosswalk();
     driving.detect_objects_around();
@@ -1079,7 +1163,6 @@ void loop() {
     if(untilted_parking && parallel_with_beside_kickboard && on_the_parking_line){
       if(btdata == '1'){
         Serial.println("parking complete");
-        lcd.print("parking complete");
         parking_complete = true;
         delay(30000);
       }
@@ -1089,21 +1172,15 @@ void loop() {
       if(btdata == '1'){
         if(!on_the_parking_line){
           Serial.println("Please check the parking line.");
-          lcd.print("Please check the parking line.");
           delay(1000);
-          lcd.clear();
         }
         else if(!parallel_with_beside_kickboard){
           Serial.println("Please park parallel to the side kickboard.");
-          lcd.print("Please park parallel to the side kickboard.");
           delay(1000);
-          lcd.clear();
         }
         else if(!untilted_parking){
           Serial.println("Please park the kickboard parallel to the ground.");
-          lcd.print("Please park the kickboard parallel to the ground.");
           delay(1000);
-          lcd.clear();
         }
         parking_complete = false;
       }
