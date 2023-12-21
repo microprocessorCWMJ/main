@@ -719,8 +719,6 @@ class driving{
     void detect_dangerous_driving(){
       initSensor();
       getAngleXY();
-      // Serial.print("pitch:");
-      // Serial.println(angleAcY);
       if((angleAcY >= 20 || angleAcY <= -20) && !tilt_start_flag){
         tilted_current_time = millis();
         tilt_start_flag = true;
@@ -805,14 +803,7 @@ class driving{
       double distance_LeftBehind = measureDistanceCm(LeftBehindpinTrig, LeftBehindpinEcho);
       double distance_RightFront = measureDistanceCm(RightFrontpinTrig, RightFrontpinEcho);
       double distance_RightBehind = measureDistanceCm(RightBehindpinTrig, RightBehindpinEcho);
-      // Serial.print("dist_LF:");
-      // Serial.print(distance_LeftFront);
-      // Serial.print(", dist_LB:");
-      // Serial.print(distance_LeftBehind);
-      // Serial.print(", dist_RF:");
-      // Serial.print(distance_RightFront);
-      // Serial.print(", dist_LF:");
-      // Serial.print(distance_RightBehind);
+    
       //Ensuring that there is no distance error or The area that you are in is not open land.
       if(((distance_LeftFront < 1000) && (distance_LeftFront > 0)) && ((distance_LeftBehind < 1000 && distance_LeftBehind > 0)) && ((distance_RightFront < 1000 && distance_RightFront > 0)) && ((distance_RightBehind < 1000 && distance_RightBehind > 0))){
         
@@ -958,35 +949,7 @@ class driving{
       totval2 = redValue2 + greenValue2 + blueValue2;
       totval3 = redValue3 + greenValue3 + blueValue3;
       totval4 = redValue4 + greenValue4 + blueValue4;
-      Serial.print(redValue1);
-      Serial.print("/");
-      Serial.print(greenValue1);
-      Serial.print("/");
-      Serial.println(blueValue1);
-      Serial.print(redValue2);
-      Serial.print("/");
-      Serial.print(greenValue2);
-      Serial.print("/");
-      Serial.println(blueValue2);
-      Serial.print(redValue3);
-      Serial.print("/");
-      Serial.print(greenValue3);
-      Serial.print("/");
-      Serial.println(blueValue3);
-      // Serial.print(redValue4);
-      // Serial.print("/");
-      // Serial.print(greenValue4);
-      // Serial.print("/");
-      // Serial.println(blueValue4);
-      // Serial.println("///////////////////////////////////////");
-      // delay(1000);
-      // Serial.print("1:");
-      // Serial.print(totval1);
-      // Serial.print(", 2:");
-      // Serial.print(totval2);
-      // Serial.print(", 3:");
-      // Serial.print(totval3);
-      
+
       if(!white_flag && ((totval1 >= 720) || (totval2 >= 720))){
         white_flag = true;
         black_time = millis() - black_start_time;
